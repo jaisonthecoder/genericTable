@@ -1,0 +1,32 @@
+{
+  "name": "@pcs/generic-listing",
+  "version": "0.4.077",
+  "peerDependencies": {
+    "@angular/common": "^14.1.0",
+    "@angular/core": "^14.1.0"
+  },
+  "devDependencies": {
+    
+  },
+  "scripts": {
+    "build":"tsc -p tsconfig.schematics.json",
+    "postbuild":"copyfiles schematics/collection.json  schematics/*/schema.json  schematics/*/files/**  ../../dist/mg-generic-listing/"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"   
+  },
+  "ng-add":{
+    "save": "true"
+  },
+  "schematics":"./schematics/collection.json",
+  "repository": {
+    "type": "git",
+    "url": "http://10.0.131.131/pcs-as-product/pcslibraries"
+  },
+  "keywords": [
+    "angular"   
+  ],
+  "author": "Jaison Joseph",
+  "license": "ISC"
+
+}

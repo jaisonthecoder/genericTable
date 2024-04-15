@@ -1,0 +1,96 @@
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { TranslocoService } from '@ngneat/transloco';
+import { GenericListingTableService, gridConfigObj } from '@pcs/generic-listing';
+import _ from 'lodash';
+
+@Component({
+  selector: 'app-generic-listing-helper-buttons',
+  templateUrl: './generic-listing-helper-buttons.component.html',
+  styleUrls: ['./generic-listing-helper-buttons.component.scss']
+})
+export class GenericListingHelperButtonsComponent implements OnInit {
+
+  @ViewChild('sortMenuTrigger') sortMenuTrigger: MatMenuTrigger;
+
+
+  @Output() onSort: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onSwitchView: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onExportData: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onCustomizeTable: EventEmitter<any> = new EventEmitter<any>();
+
+  @Input() gridConfig: gridConfigObj;
+  tableColumns = null;
+  displayedColumns: any[] 
+  tblView = true;
+  lang = 'en-US'
+  constructor(    private tblService: GenericListingTableService, private _transLocoService: TranslocoService
+    ) { }
+
+  ngOnInit(): void {
+    this._transLocoService.langChanges$.subscribe((lang)=>{this.lang = lang;});
+    this.tableColumns = this.gridConfig.tableColumns;
+    this.displayedColumns = this.gridConfig.tableColumns;
+   }
+
+  ngAfterViewInit(){
+    this.prepareColumnList(); 
+  }
+
+  prepareColumnList(){ 
+    let item = localStorage.getItem(this.gridConfig.gridId);    
+    if(item){
+      let config = JSON.parse(item);
+      this.tableColumns = _.filter(config.tableColumns, (col) => {
+        if ((col.isDefault || col.isCustomizable) && col.show && col.columnDef != 'action' && col.columnDef != 'select' && col.columnType != 'action' && col.columnType != 'select')
+          return col;
+      });
+    }
+    else{
+      this.tableColumns = _.filter(this.gridConfig.columnDefinition, (col) => {
+        if ((col.isDefault && col.isCustomizable) && col.show && col.columnDef != 'action' && col.columnDef != 'select' && col.columnType != 'action' && col.columnType != 'select')
+          return col;
+      });
+    
+    }
+
+    this.displayedColumns = this.tableColumns;
+  }
+
+ 
+  sortDataSource(col: any, start: any) {
+    if(col == 'updatedDate'){
+      let sortData: any = { ColumnName: 'updatedDate', Order: -1 };
+      sortData.Payload =  { "updatedDate.0": -1 };
+      this.onSort.emit(sortData);     
+    }
+    else{
+      let sortData: any = { ColumnName: col.columnDef, Order: start };
+      sortData.Order == "1" ? (col.sort = "asc") : (col.sort = "desc");
+      let dbField = col.dbField;
+      if(col.isMasterData &&  col.dbLabelField && col.appendDbLabelFieldLang){
+        dbField = col.dbLabelField + '.' + this.lang;
+      }
+      else if(col.isMasterData &&  col.dbLabelField) {
+        dbField = col.dbLabelField;
+      }
+      sortData.Payload = { [dbField]: sortData.Order }
+      this.onSort.emit(sortData);
+    } 
+  }
+
+  openCustomizedWindow(): void{
+    this.onCustomizeTable.emit();
+  }
+
+
+  switchView(){
+    this.tblView = !this.tblView;
+    this.onSwitchView.emit(this.tblView);
+  }
+
+  exportData(){
+    this.onExportData.emit('export');
+  }
+
+}

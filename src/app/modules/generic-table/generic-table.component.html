@@ -1,0 +1,221 @@
+<div class="mt-2 mb-4">
+
+  <!-- 
+        <app-generic-table-advance-search [searchItemCount]="2" [searchLookupServiceSource]="inlineFilterService"
+            [tableColumn]="gridConfig?.columnDefinition" (onAdvanceSearch)="onApplyAdvanceSearch($event)"
+            (onGlobalSearch)="onApplyGlobalSearch($event)" [translationService]="_transLocoService" >
+    
+        </app-generic-table-advance-search> -->
+
+  <!-- <button (click)="customizTable();">Customize Table</button> -->
+
+
+  <ng-container *ngIf="showTable">
+    <mg-generic-listing-table #genericTable [dataList]="gridConfig?.dataList" [rowTemplate]="tableRowTemp" lang="lang"
+      [headerTemplate]="tableHeaderTemp" [showGlobalSearch]="true" [showPagination]="true" [showAdvanceSearch]="true"
+      [multiSelect]="true" [gridConfig]="gridConfig" [selectedLang]="lang" (onGridDataChange)="getGridData($event)"
+      (onPageChanges)="onGridPageChanges($event)" (onSelectItem)="onSelectItem($event)"
+      (onUnSelectItem)="onUnSelectItem($event)" (onMenuFilterChanges)="onMenuFilterChanges($event)"
+      (onAdvanceSearch)="onApplyAdvanceSearch($event)" (onGlobalSearch)="onApplyGlobalSearch($event)"
+      (onSort)="onSortOrderChange($event)" (onDoubleClick)="viewClick($event)"
+      [inlineFilterServiceSource]="inlineFilterService" [cardItemTemplate]="cardItemTemplate"
+      (afterCustomizeTable)="afterCustomizeTableFn($event)" [cardItemPerPage]="4"         (resetAllFilter)="clearFilter($event)"
+      >
+    </mg-generic-listing-table>
+    <ng-template #tableRowTemp let-context="context">
+      <div [ngSwitch]="context.columnname">
+
+        <ng-container *ngSwitchCase="'action'">
+
+          <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
+            <svg width="7" height="27" viewBox="0 0 7 27" class="icon-size-5">
+              <g id="Group_159864" data-name="Group 159864" transform="translate(-1807 -328)">
+                <circle id="Ellipse_742" data-name="Ellipse 742" cx="3.5" cy="3.5" r="3.5"
+                  transform="translate(1807 328)" fill="#083668" />
+                <circle id="Ellipse_743" data-name="Ellipse 743" cx="3.5" cy="3.5" r="3.5"
+                  transform="translate(1807 338)" fill="#083668" />
+                <circle id="Ellipse_744" data-name="Ellipse 744" cx="3.5" cy="3.5" r="3.5"
+                  transform="translate(1807 348)" fill="#083668" />
+              </g>
+            </svg>
+          </button>
+          <mat-menu #summaryMenu="matMenu">
+            <!-- <button *ngIf="context?.row?.status !== reqStatus.Pending && context?.row?.vesselCallStatus !== reqStatus.Approved" mat-menu-item
+                                (click)="editClick(context?.row)"
+                                [disabled]="isDisableActions(context?.row, 'modify')? 'disabled': null">
+                                <img class="icon-size-8 mr-3" [src]="getImgPath('Modify.png')" />
+                                <span class="text-[#5392D9]">
+                                    {{
+                                    "Modify" | transloco
+                                    }}
+                                </span>
+                            </button>
+                            <button *ngIf="context?.row?.status !== reqStatus.Pending || context?.row?.vesselCallStatus === reqStatus.Approved"  mat-menu-item
+                                (click)="editClick(context?.row)"
+                                [disabled]="isDisableActions(context?.row, 'modify')? 'disabled': null">
+                                <img class="icon-size-8 mr-3" [src]="getImgPath('modify_disable.svg')" />
+                                <span class="text-[#CBCBCB]">
+                                    {{
+                                    "Modify" | transloco
+                                    }}
+                                </span>
+                            </button> -->
+
+            <button
+              *ngIf="context?.row?.status !== reqStatus.Pending && context?.row?.vesselCallStatus !== reqStatus.Approved"
+              mat-menu-item (click)="editClick(context?.row)">
+              <img class="icon-size-8 mr-3" src="{{ 'Modify.png' | imagePath }}">
+              <span class="text-[#5392D9]">{{ "Modify" | transloco }}</span>
+            </button>
+            <button
+              *ngIf="context?.row?.status === reqStatus.Pending || context?.row?.vesselCallStatus === reqStatus.Approved"
+              mat-menu-item disabled (click)="editClick(context?.row)">
+              <img class="icon-size-8 mr-3" [src]="getImgPath('modify_disable.svg')">
+              <span class="text-[#CBCBCB]">{{ "Modify" | transloco }}</span>
+            </button>
+
+
+            <button *ngIf="context?.row?.status === reqStatus.Draft" mat-menu-item
+            (click)="deleteClick(context?.row)"
+            [disabled]="isDisableActions(context?.row, 'delete')?  true: false">
+            <img class="icon-size-8 mr-3" [src]="getImgPath('delete_blue.svg')" />
+            <div class="text-[#5392D9]">{{ "Delete" | transloco }}</div>
+        </button>
+
+        <button *ngIf="context?.row?.status !== reqStatus.Draft" mat-menu-item
+            (click)="deleteClick(context?.row)"
+            [disabled]="isDisableActions(context?.row, 'delete')?  true: false">
+            <img class="icon-size-8 mr-3" [src]="getImgPath('delete.png')" />
+            <div class="text-[#CBCBCB]">{{ "Delete" | transloco }}</div>
+        </button>
+
+
+          </mat-menu>
+
+        </ng-container>
+
+
+
+        <ng-container *ngSwitchCase="'request'">
+          <button class="btn-Request font-thin mr-6 pl-3 px-3 py-1" [matMenuTriggerFor]="requestMenu">
+            <div class="flex justify-between gap-2 items-center">
+              <span flex="90" style="white-space: nowrap">
+                {{ "Request" | transloco }}
+              </span>
+            </div>
+          </button>
+
+          <mat-menu #requestMenu="matMenu" class="mr-10 requestPopupMenu" backdropClass="requestPopupTemplate"
+            xPosition="before">
+            <ng-container [ngTemplateOutlet]="requestPopupCardTemplate"
+              [ngTemplateOutletContext]="{dataitem: context?.row}"></ng-container>
+          </mat-menu>
+
+        </ng-container>
+
+
+
+
+        <ng-container *ngSwitchCase="'status'">
+          <div style="display:flex;justify-content: center; text-align: center;">
+            <img src="{{ context?.row?.statusImgPath }}" style="width: 25px" data-toggle="tooltip"
+              [matTooltip]="getStatusText(context?.row?.status)" data-placement="bottom" alt="" />
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'vesselFlag'">
+          <div style="display:flex;justify-content: center; text-align: center;">
+            <img src="{{ context?.row?.flagImgPath }}" style="width: 25px" data-toggle="tooltip"
+              [matTooltip]="getStatusText(context?.row?.vesselFlag)" data-placement="bottom" alt="" />
+          </div>
+        </ng-container>
+
+
+        <ng-container *ngSwitchDefault>
+          <span  [matTooltip]="context.value | transloco"      [ngClass]="{'disabled':context?.context?.row?.disabled}">{{context.value | transloco}}</span>
+        </ng-container>
+      </div>
+    </ng-template>
+
+    <ng-template #tableHeaderTemp let-context="context">
+      <span title="{{context.header}}">{{context.header | transloco}} </span>
+    </ng-template>
+
+
+
+  </ng-container>
+
+
+
+
+  <!-- <ng-container *ngIf="!tblView">
+            <app-generic-listing-card   *ngIf="sourceData?.length > 0" (onPageChange)="onGridPageChanges($event)"
+                (onDoubleClick)="viewClick($event)" (onEditClick)="editClick($event)" [sourceData]="sourceData"
+                [gridConfig]="gridConfig" [cardItemTemplate]="cardItemTemplate"></app-generic-listing-card>
+        </ng-container> -->
+
+
+
+
+
+
+
+
+
+  <ng-template #cardItemTemplate let-context="context" let-voyage="context.item">
+
+
+
+
+  </ng-template>
+
+
+  <!-- 
+        <div *ngIf="gridConfig?.dataList && gridConfig?.dataList?.length == 0">
+            <div class="grid justify-items-center space-y-5 mt-10">
+                <img [src]="getImgPath('no_data_found.svg')" class="imgButton" class="w-64" />
+                <div class="text-[#083668] text-2xl font-bold text-center">
+                    {{"No Data Found" | transloco}}
+                </div>
+                <div class="text-center text-[#083668]">
+                    {{"Please adjust your search and filters criteria" | transloco}}
+                </div>
+                <div class="text-center">
+                    <button (click)="clearFilter()" class="bg-[#083668] p-2 text-center text-white"> {{"Clear Filter" | transloco}} </button>
+                </div>
+            </div>
+        </div>
+     -->
+</div>
+
+
+
+<ng-template #requestPopupCardTemplate let-dataitem="dataitem">
+  <!-- Content is -  {{dataitem?.vesselType}} -->
+  <ul class="m-0 p-4 pt-2 pb-2  flex gap-2">
+    <li>
+      <a class="flex whitespace-nowrap" (click)="shiftRequestClick(dataitem)">
+        <img class="imgButton mr-3" [src]="getImgPath('shift-req-icon.svg')" style="width:32px">
+        <span>{{"Shift Request" | transloco}}</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="flex whitespace-nowrap" (click)="PTWRequestClick(dataitem)">
+        <img class="imgButton mr-3 " [src]="getImgPath('ptw-req-icon.svg')" style="width:26px">
+        <span>{{"PTW Request" | transloco}}</span>
+        <label>{{dataitem?.totalPTWRequestCount}}</label>
+      </a>
+    </li>
+
+
+    <li>
+      <a class="flex whitespace-nowrap" (click)="serviceRequestClick(dataitem)">
+        <img class="imgButton mr-3" [src]="getImgPath('service-req-icon.svg')" style="width:26px">
+        <span>{{"Service Request" | transloco}}</span>
+        <label>{{dataitem?.totalServiceRequestCount}}</label>
+      </a>
+    </li>
+
+  </ul>
+</ng-template>

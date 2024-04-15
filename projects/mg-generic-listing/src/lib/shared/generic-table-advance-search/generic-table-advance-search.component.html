@@ -1,0 +1,260 @@
+<div class="generic-table-search">
+    <!--GLOBAL SEARCH -->
+    <div class=" generic-global-search" [ngClass]="{'active': !showAdvSearch}">
+        <div class="d-flex ">
+            <section class="d-flex flex-column col-auto" [ngClass]="{'disabled': showAdvSearch}"
+                style="padding: 0.5rem 0.5rem; background-color: #fff;">
+                <svg style="width:24px; height:24px " fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="#5392D9" class="w-6 h-6">
+                    <path class="text-[#5392D9] " stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+            </section>
+
+            <section class="d-flex flex-column col "
+                style="padding: 0.5rem 0.5rem; position: relative; background-color: #fff;"
+                [ngClass]="{'disabled': showAdvSearch}">
+                <input [disabled]="showAdvSearch" [(ngModel)]="globalSearchModel"
+                    (keyup)="searchTerm$.next(globalSearchModel);"  (paste)="searchTerm$.next(globalSearchModel);" (change)="searchTerm$.next(globalSearchModel);"  type="text" class="mgGt_w_100 mgGt_d_block"
+                    placeholder="{{'Search'| translang}}" />
+                <span *ngIf="globalSearchModel != '' " (click)="clearGlobalSearch()"
+                    class="clear-glbl-search-btn">X</span>
+            </section>
+
+            <section *ngIf="!hideAdvanceSearch" class="d-flex flex-column col-auto" style="padding: 0;">
+                <button (click)="toggleAdvanceSearch();" class="toggelSearchBtn">
+                    <div *ngIf="!showAdvSearch">
+                        {{'Show Advance Search'| translang}}
+                    </div>
+                    <div *ngIf="showAdvSearch"
+                        title="{{'Hiding Advance Search will clear the active filter conditions' | translang}}">
+                        {{'Hide Advance Search' | translang}}
+                    </div>
+                </button>
+            </section>
+        </div>
+    </div>
+
+    <!--ADVANCE SEARCH -->
+    <div *ngIf="showAdvSearch && !hideAdvanceSearch" class="generic-advance-search" [ngClass]="{'active': showAdvSearch}">
+        <ng-container *ngFor="let item of searchItemList; let idx = index;">
+            <div class="d-flex search-list">
+
+
+
+                <!--Selection-->
+                <section class="d-flex flex-column col-auto" *ngIf="idx != 0">
+                    <div class="select-item">
+                        <mat-checkbox [(ngModel)]="item.selected" (change)="onItemSelect($event, item, idx)"
+                            style="margin-left: 8px;"></mat-checkbox>
+                    </div>
+                </section>
+
+
+
+                <!--Operator-->
+                <section class="d-flex flex-column col-auto" *ngIf="idx != 0" [ngClass]="{'disabled': !item.selected}">
+                    <mat-form-field class="mgGt_w_100 mgGt_d_block" [floatLabel]="'never'">
+                        <mat-select (selectionChange)="onSearchOperatorChange($event, item, idx)"
+                            [disabled]="!item.selected" name="operator" [(ngModel)]="item.operator"
+                            placeholder="{{'Operator'| translang}}">
+                            <mat-select-trigger>
+                                <span *ngIf="item.operator == null"> {{'Operator'| translang}} </span>
+                                <span *ngIf="item.operator !== null"> {{item.operatorName | translang}} </span>
+                            </mat-select-trigger>
+
+                            <ng-container *ngFor="let opr of item.operatorList">
+                                <mat-option [value]="opr.value">{{opr.name| translang}}</mat-option>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+                </section>
+
+
+
+
+                <!--Field-->
+                <section class="d-flex flex-column col" [ngClass]="{'disabled': !item.selected}">
+                    <mat-form-field class="mgGt_w_100 mgGt_d_block" [floatLabel]="'never'">
+                        <mat-select name="field" [disabled]="!item.selected" [(ngModel)]="item.field"
+                            (selectionChange)="onSearchFieldChange($event, item, idx)"
+                            placeholder="{{'Select Field' | translang}}">
+                            <mat-select-trigger>
+                                <span *ngIf="item.field == null"> {{'Select Field'| translang}}</span>
+                                <span *ngIf="item.field !== null">{{item.fieldName| translang}} </span>
+                            </mat-select-trigger>
+
+                            <ng-container *ngFor="let col of searchEnabledColumnList">
+                                <!-- <mat-option *ngIf="(item.field == col.columnDef ) || !col.selected"
+                                [value]="col.columnDef">{{col.header}}</mat-option> -->
+                                <mat-option [value]="col.columnDef">{{col.header | translang }}</mat-option>
+
+                                <!-- <mat-option [value]="col.columnDef">{{translateThis(col.header, selectedLang)}}</mat-option> -->
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+
+                </section>
+
+
+
+                <!--Conditions-->
+                <section class="d-flex flex-column col" [ngClass]="{'disabled': !item.selected}">
+                    <mat-form-field class="mgGt_w_100 mgGt_d_block" [floatLabel]="'never'">
+
+                        <mat-select (selectionChange)="onSearchConditionChange($event, item, idx); item.value = null;"
+                            [disabled]="item.conditionList?.length == 0 || !item.selected" name="condition"
+                            [(ngModel)]="item.condition" placeholder="{{'Select Condition'| translang}}">
+                            <mat-select-trigger>
+                                <span *ngIf="item.condition == null">{{'Select Condition'| translang}} </span>
+                                <span *ngIf="item.condition !== null"> {{item.conditionName | translang}} </span>
+                            </mat-select-trigger>
+
+                            <ng-container *ngFor="let _condition of item.conditionList;">
+                                <mat-option [value]="_condition.id"> {{_condition.name | translang}} </mat-option>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+
+                </section>
+
+
+
+
+
+                <!--Values-->
+                <section class="d-flex flex-column col" [ngClass]="{'disabled': !item.selected}">
+
+                    <ng-container
+                        *ngIf=" item.fieldType == 'text'  || item.fieldType == 'string' || item.fieldType == null">
+                        <mat-form-field class="mgGt_w_100 mgGt_d_block" [floatLabel]="'never'">
+                            <input matInput #searchInputItem
+                                [disabled]="item.condition == null || !item.condition || !item.selected"
+                                [(ngModel)]="item.value" (change)="onTextValueChange($event, item, idx)"
+                                placeholder="{{'Enter Search Value'| translang}}  ">
+                        </mat-form-field>
+
+                    </ng-container>
+
+
+
+                    <ng-container *ngIf="item.fieldType == 'list'">
+                        <mat-form-field class="mgGt_w_100 mgGt_d_block" [floatLabel]="'never'">
+                            <mat-select
+                                [disabled]="item.valueList?.length == 0 || item.condition == null || !item.condition || !item.selected"
+                                name="condition" 
+                                placeholder="{{'Select Value'| translang}}">
+                                <mat-select-trigger>
+                                    <span *ngIf="item.value == null">{{'Select Value'| translang}} </span>
+                                    <span *ngIf="item.value !== null"> {{item.value| translang}}</span>
+                                </mat-select-trigger>
+
+                                <div class="matSelectWrap relative ">
+                                    <input class="valueSearchField" placeholder="{{'search' | translang}} "
+                                        (keyup)="onValueFieldSearch($event?.target, item ,  'name')">
+
+                                    <ng-container *ngFor="let _val of item.filteredValueList">
+                                        <mat-option (click)="onMasterValueSelect(_val, item, idx)"
+                                            [value]="extractFilterValue(_val, selectedLang, 'name')"> <span>
+                                                {{ extractFilterValue(_val, selectedLang, "value") }}
+                                            </span></mat-option>
+                                    </ng-container>
+                                </div>
+                            </mat-select>
+
+
+
+<!-- 
+                            <mat-select *ngIf="!item.isMasterData" (selectionChange)="onValueSelect($event, item, idx)"
+                                [disabled]="item.valueList?.length == 0 || item.condition == null || !item.condition || !item.selected"
+                                name="condition" [(value)]="item.value" placeholder="{{'Select Value'| translang}}">
+                                <mat-select-trigger>
+                                    <span *ngIf="item.value == null">xxxx{{'Select Value'| translang}} </span>
+                                    <span *ngIf="item.value !== null"> {{item.value| translang}}</span>
+                                </mat-select-trigger>
+
+                                <div class="matSelectWrap relative ">
+                                    <input class="valueSearchField" placeholder="search "
+                                        (keyup)="onValueFieldSearch($event?.target, item ,  'name')">
+
+                                    <ng-container *ngFor="let _val of item.filteredValueList">
+                                        <mat-option [value]="extractFilterValue(_val, selectedLang, 'description')">
+                                            <span>
+                                                {{ extractFilterValue(_val, selectedLang, "name") }}
+                                            </span></mat-option>
+                                    </ng-container>
+                                </div>
+                            </mat-select>
+ -->
+
+                        </mat-form-field>
+                    </ng-container>
+
+
+                    <ng-container *ngIf="item.fieldType == 'date'">
+                        <mat-form-field [floatLabel]="'never'" class="mgGt_w_100 mgGt_d_block"
+                            *ngIf="item.condition !== 'between'">
+                            <mat-datepicker #SingleDatePicker [disabled]="!item.selected"></mat-datepicker>
+                            <mat-datepicker-toggle matSuffix [for]="SingleDatePicker">
+                            </mat-datepicker-toggle>
+                            <input [disabled]="!item.selected" #SingleDatePickerInput
+                                (dateInput)="onDateValueChange($event, item, 'startDate', idx)" matInput
+                                [matDatepicker]="SingleDatePicker" placeholder="{{'From'| translang}}">
+                        </mat-form-field>
+
+
+
+                        <mat-form-field [floatLabel]="'never'" class="mgGt_w_100 mgGt_d_block"
+                            *ngIf="item.condition == 'between'">
+                            <mat-date-range-input [rangePicker]="multiDatePicker" [disabled]="!item.selected">
+                                <input [disabled]="!item.selected" #StartDateInput 
+                                    (dateInput)="onDateValueChange($event, item, 'startDate', idx)"
+                                    (dateChange)="onDateValueChange($event, item, 'startDate', idx)" matStartDate
+                                    placeholder="{{'Start date'| translang}}">
+                                <input [disabled]="!item.selected" #EndDateInput
+                                    (dateInput)="onDateValueChange($event, item, 'endDate', idx)"
+                                    (dateChange)="onDateValueChange($event, item, 'endDate', idx)" matEndDate
+                                    placeholder="{{'End date'| translang}}">
+                            </mat-date-range-input>
+                            <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
+                            <mat-datepicker-toggle matIconSuffix [for]="multiDatePicker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #multiDatePicker></mat-date-range-picker>
+                        </mat-form-field>
+
+                    </ng-container>
+
+
+                    <ng-container *ngIf="item.fieldType == 'number'">
+
+                    </ng-container>
+
+
+                </section>
+
+
+
+
+
+
+            </div>
+            <div class="generic-adv-search-error" *ngIf="item.error">
+                {{item.errorMsg | translang }}
+            </div>
+        </ng-container>
+
+        <div class="generic-advance-search-btns">
+            <button (click)="applySearch()" class="applySearchBtn">
+                <div> {{"Apply" | translang}} </div>
+            </button>
+
+
+            <button (click)="addNewSearchItem()" class="AddConditionBtn">
+                <div> {{"Add Condition" | translang}} </div>
+            </button>
+
+            <button (click)="resetAdvanceSearch(true)" class="resetSearchBtn">
+                <div> {{"Reset" | translang}} </div>
+            </button>
+        </div>
+    </div>
+</div>

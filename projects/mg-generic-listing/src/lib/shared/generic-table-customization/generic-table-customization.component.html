@@ -1,0 +1,104 @@
+
+<div class="customiseTableComponent generic-table-customization ">
+    <div class="modal-header  p-16 py-0 flex flex-shrink-0 items-center justify-between p-2">
+
+    <div class="modal-title">
+        <h1>{{"Customize The Table" | translang}}</h1>
+    </div>
+
+        <div class="modal-close d-flex justify-end">
+            <button mat-icon-button (click)="Close()" >
+                X
+            </button>
+        </div></div>
+    <div class="modal-body relative p-16  py-0">
+
+        <div class="itemPerPageBlock">
+            
+                <mat-label class="mb-2">{{"Item per page" | translang}}</mat-label><br />
+                <!-- <mat-select #pageSizeSelect class="customiseTableSelect pt-2" [(ngModel)]="pageSize"
+                    [disableOptionCentering]="true" (selectionChange)='customizeItemPerpage($event)'>
+
+                    <mat-option *ngFor="let item of itemperpageList" value={{item}}>
+                        {{item}}
+                    </mat-option>
+                </mat-select> -->
+
+                <select  [(ngModel)]="pageSize" (change)='customizeItemPerpage(pageSize)'>
+                    <option *ngFor="let item of itemperpageList" value={{item}}>
+                        {{item}}
+                    </option>
+                </select>
+           
+
+        </div>
+
+
+     
+
+        <div class="mgGt_heading">          
+            {{"Select the columns" | translang}}   
+            </div>
+
+    <div class="columnlistMenu">  
+        <ng-container *ngFor="let item of columnDefinition; let i = index">
+            <ng-container *ngIf="item.isDefault">
+                <label title="Default Columns" [ngClass]="{'isSelected isDefault cursor_notAllowed': item.isDefault}">
+                    <span>{{ item.header | translang}}</span>
+                </label>
+            </ng-container>
+            <ng-container *ngIf="!item.isDefault">
+                <label [ngClass]="{ isSelected: item.isSelected || item.isCustomized  }" (click)="addOrRemoveColumn(item)">
+                    <span>{{ item.header | translang }}</span>
+                </label>
+            </ng-container>
+        </ng-container>
+    </div>
+
+
+
+<div class="mgGt_heading">
+    {{"Table Preview" | translang}}
+</div>
+
+<!-- <mg-generic-listing-table  #genericCustomTable *ngIf="gridConfig"  [dataList]="gridConfig?.dataList"
+    [rowTemplate]="tableRowTemp"[headerTemplate]="tableHeaderTemp"  [showPagination]="false"    [showAdvanceSearch]="false"  [multiSelect]="true"    [gridConfig]="gridConfig"
+    (onPageChanges)="onGridPageChanges($event)"  (onHeaderDropped)="onHeaderDropped($event)">
+</mg-generic-listing-table> -->
+<ng-container #vc ></ng-container>
+
+
+<div class="flex mt-7">
+    <span class="d-flex" style="margin-top: 5px;">{{'Note: You can able to drag the column using' | translang}} (   <svg   width="14px"      fill="#eee" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
+          style="enable-background:new 0 0 512 512;" xml:space="preserve">
+          <g>
+            <path d="M510.3,252.4l-81.7-64.4c-2-1.6-4.9-1.2-6.5,0.8c-0.6,0.8-1,1.8-1,2.9V233H279.1V90.9h41.5c3.8,0,6-4.5,3.6-7.5L259.7,1.8
+         c-1.5-2-4.4-2.4-6.4-0.8c-0.3,0.2-0.6,0.5-0.8,0.8l-64.5,81.7c-1.6,2-1.2,4.9,0.8,6.5c0.8,0.6,1.8,1,2.9,1H233V233H90.9v-41.5
+         c0-3.8-4.5-6-7.5-3.6L1.8,252.4c-2,1.5-2.4,4.4-0.8,6.4c0.2,0.3,0.5,0.6,0.8,0.8l81.6,64.5c3,2.4,7.5,0.3,7.5-3.6v-41.4h142.1
+         v142.1h-41.5c-3.8,0-6,4.5-3.6,7.5l64.5,81.6c1.9,2.4,5.4,2.4,7.2,0l64.5-81.6c2.4-3,0.3-7.5-3.6-7.5h-41.3V279.1h142.1v41.5
+         c0,3.8,4.5,6,7.5,3.6l81.6-64.5c2-1.6,2.4-4.5,0.8-6.6C510.8,252.8,510.6,252.6,510.3,252.4z" />
+          </g>
+        </svg>)</span>
+</div>
+
+    <div class="modal-footer  d-flex  items-center justify-center p-4 border-gray-200">
+        <button class="submitCustomizationBtn" (click)="submitCustomization()" type="button" >
+            {{"Confirm Table Customization" | translang}}
+        </button>
+    </div>
+</div>
+
+<ng-template #tableRowTemp let-context="context">   
+    <div [ngSwitch]="context.columnname">  
+        <ng-container *ngSwitchDefault>
+            <span  [ngClass]="{'disabled':context?.element?.disabled}" >{{context.value | translang}}</span>
+         </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #tableHeaderTemp let-context="context">
+    <span title="{{context.value}}" >{{context.header | translang}}</span>
+</ng-template>
+
+
+

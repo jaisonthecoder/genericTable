@@ -1,0 +1,86 @@
+
+@import "../../assets/scss/generic-table-styles.scss";
+::ng-deep{
+    .pcs-generic-table{
+        background: none !important;
+    
+        table-layout: AUTO !important;
+        width:100% !important;
+    
+       tr.mat-header-row{
+        height:45px !important;
+       }
+    
+        th{
+            white-space: nowrap;
+            color:#083668;
+            font-weight: 600;
+        }
+    
+        td, th{
+            padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        }
+    
+        .col-nowrap *{
+            white-space: nowrap !important;
+            text-overflow: ellipsis !important;
+            overflow: hidden !important;
+           
+        }
+    
+     
+           
+        }
+    
+    }
+
+    .filter-cion-svg{
+        width:16px;
+        height: 16px;
+        margin-left: 4px;
+    }
+
+    .no-data-template{
+        text-align: center;
+        justify-content: center;
+        color:083668;
+        figure{
+            width: 100%;
+    display: block;
+    height: 300px;
+    text-align: center;
+    padding: 1rem;
+
+    svg{
+        width:100%
+    }
+        }
+    }
+
+
+    .mg-generic-listing-wraper{
+
+        &:dir[rtl]{
+            direction: rtl !important;
+            *{
+                direction: rtl !important;
+
+            }
+        }
+
+        &:dir[ltr]{
+            direction: ltr !important;
+            *{
+                direction: ltr !important;
+
+            }
+        }
+
+        .stickyHeder{
+            position: sticky;
+            z-index: 9999;
+            top:0px
+        }
+
+    }

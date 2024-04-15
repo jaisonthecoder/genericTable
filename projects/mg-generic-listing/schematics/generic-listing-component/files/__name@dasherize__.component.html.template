@@ -1,0 +1,265 @@
+<div class="mt-10 mb-4">
+
+<!-- 
+    <app-generic-table-advance-search [searchItemCount]="2" [searchLookupServiceSource]="inlineFilterService"
+        [tableColumn]="gridConfig?.columnDefinition" (onAdvanceSearch)="onApplyAdvanceSearch($event)"
+        (onGlobalSearch)="onApplyGlobalSearch($event)" [translationService]="_transLocoService" >
+
+    </app-generic-table-advance-search> -->
+
+    <!-- <button (click)="customizTable();">Customize Table</button> -->
+
+    
+    <ng-container *ngIf="showTable" >
+        <mg-generic-listing-table #genericTable [dataList]="gridConfig?.dataList" [rowTemplate]="tableRowTemp"
+            [headerTemplate]="tableHeaderTemp" [showGlobalSearch]="true" [showPagination]="true"
+            [showAdvanceSearch]="true" [multiSelect]="true"  [selectedLang]="lang" [gridConfig]="gridConfig"
+            (onGridDataChange)="getGridData($event)" (onPageChanges)="onGridPageChanges($event)"
+            (onSelectItem)="onSelectItem($event)" (onUnSelectItem)="onUnSelectItem($event)"
+            (onMenuFilterChanges)="onMenuFilterChanges($event)" (onAdvanceSearch)="onApplyAdvanceSearch($event)"
+            (onGlobalSearch)="onApplyGlobalSearch($event)" (onSort)="onSortOrderChange($event)"
+            (onDoubleClick)="viewClick($event)" [inlineFilterServiceSource]="inlineFilterService" [cardItemTemplate]="cardItemTemplate"
+            (afterCustomizeTable)="afterCustomizeTableFn($event)"  [cardItemPerPage]="4" >
+        </mg-generic-listing-table>
+        <ng-template #tableRowTemp let-context="context">
+            <div [ngSwitch]="context.columnname">
+
+                <ng-container *ngSwitchCase="'action'">
+    
+                        <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
+                            <svg width="7" height="27" viewBox="0 0 7 27" class="icon-size-5">
+                                <g id="Group_159864" data-name="Group 159864" transform="translate(-1807 -328)">
+                                    <circle id="Ellipse_742" data-name="Ellipse 742" cx="3.5" cy="3.5" r="3.5"
+                                        transform="translate(1807 328)" fill="#083668" />
+                                    <circle id="Ellipse_743" data-name="Ellipse 743" cx="3.5" cy="3.5" r="3.5"
+                                        transform="translate(1807 338)" fill="#083668" />
+                                    <circle id="Ellipse_744" data-name="Ellipse 744" cx="3.5" cy="3.5" r="3.5"
+                                        transform="translate(1807 348)" fill="#083668" />
+                                </g>
+                            </svg>
+                        </button>
+                        <mat-menu #summaryMenu="matMenu">
+
+
+
+                            
+                            <button *ngIf="context?.row?.manifeststatus !== reqStatus.Pending" mat-menu-item
+                                (click)="editClick(context?.row)"
+                                [disabled]="isDisableActions(context?.row, 'modify')? 'disabled': null">
+                                <img class="icon-size-8 mr-3" [src]="getImgPath('Modify.png')" />
+                                <span class="text-[#5392D9]">
+                                    {{
+                                    "Modify" | transloco
+                                    }}
+                                </span>
+                            </button>
+                            <button *ngIf="context?.row?.manifeststatus === reqStatus.Pending" mat-menu-item
+                                (click)="editClick(context?.row)"
+                                [disabled]="isDisableActions(context?.row, 'modify')? true: false">
+                                <img class="icon-size-8 mr-3" [src]="getImgPath('modify_disable.svg')" />
+                                <span class="text-[#CBCBCB]">
+                                    {{
+                                    "Modify" | transloco
+                                    }}
+                                </span>
+                            </button>
+    
+                            <button *ngIf="context?.row?.manifeststatus === reqStatus.Draft" mat-menu-item
+                                (click)="deleteClick(context?.row)"
+                                [disabled]="isDisableActions(context?.row, 'delete')?  true: false">
+                                <img class="icon-size-8 mr-3" [src]="getImgPath('delete_blue.svg')" />
+                                <div class="text-[#5392D9]">{{ "Delete" | transloco }}</div>
+                            </button>
+    
+                            <button *ngIf="context?.row?.manifeststatus !== reqStatus.Draft" mat-menu-item
+                                (click)="deleteClick(context?.row)"
+                                [disabled]="isDisableActions(context?.row, 'delete')?  true: false">
+                                <img class="icon-size-8 mr-3" [src]="getImgPath('delete.png')" />
+                                <div class="text-[#CBCBCB]">{{ "Delete" | transloco }}</div>
+                            </button>
+                        </mat-menu>
+    
+                    </ng-container>
+
+                <ng-container *ngSwitchCase="'terminalStatus'">
+                    <div style="display:flex;justify-content: center;">
+                        <img src="{{ context?.row?.terminalStatusImgPath }}" style="width: 25px" data-toggle="tooltip"
+                            [matTooltip]="getStatusText(context?.row?.terminalStatus)" data-placement="bottom" alt="" />
+                    </div>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'customsStatus'">
+                    <div style="display:flex;justify-content: center;">
+                        <img src="{{ context?.row?.customsStatusImgPath }}" style="width: 25px" data-toggle="tooltip"
+                            [matTooltip]="getStatusText(context?.row?.customsStatus)" data-placement="bottom" alt="" />
+                    </div>
+                </ng-container>
+
+
+                <ng-container *ngSwitchDefault>
+                    <span [ngClass]="{'disabled':context?.context?.row?.disabled}">{{context.value | transloco}}</span>
+                </ng-container>
+            </div>
+        </ng-template>
+
+        <ng-template #tableHeaderTemp let-context="context">
+            <span title="{{context.value}}">{{context.header | transloco}} </span>
+        </ng-template>
+
+
+
+    </ng-container>
+
+
+
+
+
+    <app-generic-listing-helper-buttons [gridConfig]="gridConfig" (onCustomizeTable)="customizTable($event)"
+        (onSwitchView)="switchView($event)" (onExportData)="onExportData($event)"
+        (onSort)="onSortOrderChange($event)"></app-generic-listing-helper-buttons>
+
+
+
+
+    <ng-template #cardItemTemplate let-context="context" let-request="context.item">
+        <div class="flex cardList   rounded flex-col gap-2" (dblclick)="viewDetails(request)">
+            <section class="cardList--header flex gap-2 max-h-10 w-full mb-3">
+                <content class="cardList--header-content  w-full"
+                    [ngClass]="{'hideEta' : request?.rotationNumber ==''}">
+                    <h1 class="text-mgBlueDeepSaphire text-lg font-bold truncate text-[#2D3955]"
+                        [matTooltip]="request?.vesselName" translate>
+                        {{(request?.vesselName && request?.vesselName.length >0) ? (request?.vesselName |
+                        truncateText:20) : 'NA'}}
+                    </h1>
+
+                    <div class="flex gap-1 flex-row items-center ">
+                        <img class="w-4 mb-2" src="{{ 'Clock.svg' | imagePath }}" />
+                        <small class="text-[#5392D9] mr-2 separate-right pr-2" *ngIf="!isATAETA(request)">ETA</small>
+                        <small class="text-[#5392D9] mr-2 separate-right pr-2" *ngIf="isATAETA(request)">ATA</small>
+                        <small class="text-[#868686] flex flex-col truncate-text" *ngIf="!isATAETA(request)">
+                            <span>{{request?.eta}}</span>
+                        </small>
+                        <small class="text-[#868686] flex flex-col truncate-text" *ngIf="isATAETA(request)">
+                            <span>{{request?.ata}}</span>
+                        </small>
+
+                    </div>
+                </content>
+                <div class="card-div-action-buttons">
+                    <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
+                        <img class="icon-size-5" src="{{ 'vertical-dots.svg' | imagePath }}" />
+                    </button>
+                    <mat-menu #summaryMenu="matMenu">
+
+                        <button *ngIf="request?.terminalStatus !== reqStatus.Pending" mat-menu-item
+                            (click)="editClick(request)"
+                            [disabled]="isDisableActions(request, 'modify')? 'disabled':null">
+                            <img class="icon-size-8 mr-3" src="{{ 'Modify.png' | imagePath }}">
+                            <span class="text-[#5392D9]">{{ "Modify" | transloco }}</span>
+                        </button>
+                        <button *ngIf="request?.terminalStatus === reqStatus.Pending" mat-menu-item
+                            (click)="editClick(request)"
+                            [disabled]="isDisableActions(request, 'modify')? 'disabled':null">
+                            <img class="icon-size-8 mr-3" src="{{ 'modify_disable.svg' | imagePath }}">
+                            <span class="text-[#CBCBCB]">{{ "Modify" | transloco }}</span>
+                        </button>
+
+                        <button *ngIf="request?.terminalStatus === reqStatus.Draft" mat-menu-item
+                            (click)="deleteClick(request)"
+                            [disabled]="isDisableActions(request, 'delete')? null :'disabled'">
+                            <img class="icon-size-8 mr-3" src="{{ 'delete_blue.svg' | imagePath }}">
+                            <div class="text-[#5392D9]"> {{ "Delete" | transloco }} </div>
+                        </button>
+
+                        <button *ngIf="request?.terminalStatus !== reqStatus.Draft" mat-menu-item
+                            (click)="deleteClick(request)"
+                            [disabled]="isDisableActions(request, 'delete')? null :'disabled'">
+                            <img class="icon-size-8 mr-3" src="{{ 'delete.png' | imagePath }}">
+                            <div class="text-[#CBCBCB]"> {{ "Delete" | transloco }} </div>
+                        </button>
+
+                    </mat-menu>
+                </div>
+            </section>
+            <hr class="horizontal-line">
+
+            <section class="cardList--footer flex w-full  whitespace-nowrap py-3 ">
+                <div class="flex flex-col w-6/12">
+                    <small class="text-[#868686] pl-4">Booking No.</small>
+                    <span class="text-[#000000] text-[13px] pl-4 truncate-text">{{request?.bookingNumber}}</span>
+                </div>
+                <div class="flex flex-col w-6/12">
+                    <small class="text-[#868686]">Rotation Number</small>
+                    <span
+                        class="text-[#000000] text-[13px] truncate-text">{{request?.rotationNumber?request?.rotationNumber:'N/A'}}</span>
+                </div>
+            </section>
+            <hr class="horizontal-line mb-3">
+            <section class="cardList--footer flex w-full  whitespace-nowrap py-3 ">
+                <div class="flex flex-col w-6/12 ">
+                    <small class="text-[#868686] pl-4">Booking Type</small>
+                    <span class="text-[#000000] text-[13px] pl-4 truncate-text"
+                        [matTooltip]="request?.bookingType">{{request?.bookingType |
+                        truncateText:18}}</span>
+                </div>
+                <div class="flex flex-col w-6/12 ">
+                    <small class="text-[#868686]">Terminal</small>
+                    <span class="text-[#000000] text-[13px] truncate-text"
+                        [matTooltip]="request?.bookingType">{{request?.terminal | truncateText:18}}</span>
+                </div>
+            </section>
+
+            <section>
+                <div class="blue-box">
+                    <div class="flex flex-row  ">
+                        <div flex="10" class="items-center pt-2 pr-2 w-4/12"><small
+                                class="text-[#868686] pl-4">Shipper</small></div>
+                        <div flex="10" class="blue-vertical-line mt-1">
+                        </div>
+                        <div flex="80" class="items-center pt-2 pl-3 w-8/12 truncate-text"><span
+                                class="text-[#000000]  text-[13px]" [matTooltip]="request?.shipper">{{request?.shipper |
+                                truncateText:25}}</span></div>
+                    </div>
+                </div>
+                <div class="flex border-[0.5px] whitespace-nowrap mb-3">
+                    <div class="flex bg-neutral-100" style="min-width: 45%;">
+                        <div class="flex p-2  flex-col w-full text-left ">
+                            <small class="w-full mt-1 text-[#868686]"> Last Updated Date
+                            </small>
+                            <small class="font-semibold mb-2">
+                                {{request?.lastUpdatedDate}}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <div class="gap-2 flex-col items-center flex p-1 pt-2 w-full text-left">
+                            <span class="pr-1 flex align-center">
+                                <img class="w-6" style="min-width: 24px;" src="{{request?.customsStatusImgPath}}"
+                                    [matTooltip]="getStatusText(request?.customsStatus)" />
+                            </span>
+                            <small
+                                class="pl-1 flex items-center font-semibold {{getTextColor(request?.customsStatus)}}">
+                                Customs
+                            </small>
+                        </div>
+                        <div class="gap-2 flex-col items-center flex p-1 pt-2 w-full text-left">
+                            <span class="pr-1 flex align-center">
+                                <img class="w-6" style="min-width: 24px;" src="{{request?.terminalStatusImgPath}}"
+                                    [matTooltip]="getStatusText(request?.terminalStatus)" />
+                            </span>
+                            <small
+                                class="pl-1 flex items-center font-semibold {{getTextColor(request?.terminalStatus)}}">
+                                Terminal
+                            </small>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </ng-template>
+
+
+
+</div>

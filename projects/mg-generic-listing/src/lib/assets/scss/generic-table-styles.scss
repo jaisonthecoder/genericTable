@@ -1,0 +1,131 @@
+::ng-deep{
+    :root{
+        --mgGt_blue_btn_color: #224b78;
+        --mgGt_lightblue_btn_color: #5392d9;
+        --mgGt_white: #ffffff;
+        --mgGt_black: #222222;
+        --mgGt_error_text_color: darkred;
+        --mgGt-bg-blue:rgb(219, 234, 254);
+    }
+}
+    
+button, input, optgroup, select, textarea {
+    font-family: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+    border:0;
+}
+
+
+button, [role="button"] {
+    cursor: pointer;
+}
+button, [type='button'], [type='reset'], [type='submit'] {
+    -webkit-appearance: button;
+    background-color: transparent;
+    background-image: none;
+}
+
+
+.col {
+    flex-basis: 0;
+    flex-grow: 1;
+    max-width: 100%;
+}
+
+.col-auto {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none;
+}
+
+.items-center {
+    align-items: center !important;
+}
+.items-end {
+    align-items: end !important;
+}
+.items-start {
+    align-items: start !important;
+}
+.justify-center {
+    justify-content: center !important;
+}
+.justify-end {
+    justify-content: end !important;
+}
+.justify-start {
+    justify-content: start !important;
+}
+.d-flex, .flex {
+    display: flex;
+}
+.flex-column, .flex-col {
+    flex-direction: column !important;
+}
+
+.mgGt_w_100 {
+    width: 100% !important;
+    min-width: 100%;
+}
+
+.mgGt_heading {
+    padding: 1rem 0;
+    font-size: 1rem !important;
+}
+
+
+.mgGt_d_block {
+    display: block !important;
+}
+
+.no-wrap{
+    white-space: nowrap !important;
+}
+
+.mgGt_btns {
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    line-height: 24px;
+    background: #fff;
+    color: var(--mgGt_blue_btn_color);
+    border: 1px solid var(--mgGt_lightblue_btn_color);
+    &.btn-blue {
+        background-color: var(--mgGt_lightblue_btn_color);
+        color: #fff !important;
+        border: 1px solid var(--mgGt_lightblue_btn_color);
+    }
+
+    &.btn-dark-blue {
+        background-color: var(--mgGt_blue_btn_color);
+        color: #fff !important;
+        border: 1px solid var(--mgGt_blue_btn_color);
+    }
+
+    svg {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        max-width: 24px;
+    }
+    &:disabled{
+        opacity: 0.6;
+    }
+}
+
+.text-overflow{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    *{
+      text-overflow: ellipsis;
+    overflow: hidden;
+    }
+  }
+
+

@@ -1,0 +1,431 @@
+<div class="mg-generic-listing-wraper" [attr.dir]="selectedLang == 'en-US' ? 'ltr':'rtl'" >
+<div class="pcs-global-search-block">
+  <!--GLOBAL SEARCH-->
+  <div *ngIf="showGlobalSearch && inlineFilterService && loadedFlag">
+    <app-generic-table-advance-search [searchItemCount]="2" [hideAdvanceSearch]="hideAdvanceSearch" [searchLookupServiceSource]="inlineFilterService"
+      [tableColumn]="gridConfig?.columnDefinition" (onAdvanceSearch)="onApplyAdvanceSearch($event)"
+      (onGlobalSearch)="onApplyGlobalSearch($event)"  [selectedLang]="selectedLang"  [gridConfig]="gridConfig">
+    </app-generic-table-advance-search>
+  </div>
+
+
+  <ng-container *ngIf="tblView && loadedFlag">
+    <div *ngIf="false;else tableInstanceRef">
+      Loading....
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!tblView && loadedFlag">
+    <div *ngIf="false;else cardListRef">
+      Loading....
+    </div>
+  </ng-container>
+</div>
+
+
+
+
+
+
+<!---FILTER MENU -->
+<mat-menu #filtermenu="matMenu" class="my-class">
+  <ng-template [cdkPortalOutlet]="selectedFilter" (attached)="getInlineFilterReference($event)"></ng-template>
+</mat-menu>
+
+
+
+
+<!--LISTING TABLE TEMPLATE -->
+<ng-template #tableInstanceRef>
+  <div class="pcs-general-listing table-wrapper" [style.maxHeight]="gridConfig.height"
+    [style.overflow]="gridConfig.height ? 'auto' : 'visible'">
+    <table *ngIf="gridConfig" mat-table #table [dataSource]="dataSource" class="pcs-generic-table" cdkDropList
+      cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)"    [cdkDropListDisabled]="gridConfig?.customizationGrid? false:true">
+      <ng-container [matColumnDef]="column?.columnDef" *ngFor="let column of tableColumns; let i = index"
+        [sticky]="isSticky(column)"   >
+
+        <!--TABLE HEADER -->
+        <th mat-header-cell *matHeaderCellDef [style.position]="column.sticky ? 'sticky' : 'relative'"
+          [style.textAlign]="column.textAlign ? column.textAlign : 'left'" [style.left.px]="column.left"
+          class="{{ column.headerClassList }}" [style.textWrap]="column.textWrap?'nowrap':'unset'"
+          [style.background]="column.headerBg" [style.fontWeight]="column.headerWeight"
+          [style.color]="column.headerColor" [style.width.px]="column.width" [style.maxWidth.px]="column.width"
+          title="{{ column.header }}" cdkDrag (cdkDragStarted)="dragStarted($event, i, column)"
+          [cdkDragData]="{name: column.columnDef, columIndex: i}"  [ngClass]="{'stickyHeder': gridConfig.height}"  >
+
+          <!-- [cdkDropListDisabled]="false" -->
+          <div class="flex">
+            <ng-container *ngIf="!headerTemplate">
+              <ng-container [ngSwitch]="column?.columnDef">
+                <ng-container *ngSwitchCase="'select'">
+                  <mat-checkbox *ngIf="multiSelect && column?.columnDef == 'select'"
+                    (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+                </ng-container>
+
+                <ng-container *ngSwitchDefault>
+                  <span>{{ column.header | translang }}</span>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+
+            <ng-container *ngIf="headerTemplate">
+              <ng-container [ngSwitch]="column?.columnDef">
+                <ng-container *ngSwitchCase="'select'">
+                  <mat-checkbox *ngIf="
+                    multiSelect &&
+                    column?.columnDef == 'select' &&
+                    !column.hideColHeader
+                  " (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+
+                  <span *ngIf="column.hideColHeader"> {{  column.header | translang  }} </span>
+                </ng-container>
+
+                <ng-container *ngSwitchDefault>
+                  <ng-container *ngIf="!column.hideColHeader">
+                    <ng-template [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{
+                      context: {
+                        columnname: column?.columnDef,
+                        header: column?.header
+                      }
+                    }"></ng-template>
+                  </ng-container>
+                  <ng-container *ngIf="column.hideColHeader">
+                    <span></span>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+
+            <span class="d-flex" style="padding: 0 4px" *ngIf="column.filter && !gridConfig?.customizationGrid"
+              [matMenuTriggerFor]="filtermenu"  #menuTrigger="matMenuTrigger"   (click)="initFilter(column)">
+              <button *ngIf="!column.filerEnabled">
+
+                <svg [style.fill]="column.headerColor" fill="#083668" class="filter-cion-svg" version="1.1"
+                  id="Layer_1" viewBox="0 0 300.906 300.906" xml:space="preserve">
+                  <g>
+                    <g>
+                      <path d="M288.953,0h-277c-5.522,0-10,4.478-10,10v49.531c0,5.522,4.478,10,10,10h12.372l91.378,107.397v113.978
+                    c0,3.688,2.03,7.076,5.281,8.816c1.479,0.792,3.101,1.184,4.718,1.184c1.94,0,3.875-0.564,5.548-1.68l49.5-33
+                    c2.782-1.854,4.453-4.977,4.453-8.32v-80.978l91.378-107.397h12.372c5.522,0,10-4.478,10-10V10C298.953,4.478,294.476,0,288.953,0
+                    z M167.587,166.77c-1.539,1.809-2.384,4.105-2.384,6.48v79.305l-29.5,19.666V173.25c0-2.375-0.845-4.672-2.384-6.48L50.585,69.531
+                    h199.736L167.587,166.77z M278.953,49.531h-257V20h257V49.531z" />
+                    </g>
+                  </g>
+                </svg>
+              </button>
+
+
+
+
+
+
+              <button *ngIf="column.filerEnabled">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="19.913" height="15.432" viewBox="0 0 19.913 15.432">
+                  <g id="Group_164071" data-name="Group 164071" transform="translate(7447.078 17099.748)">
+                    <g id="Group_164070" data-name="Group 164070">
+                      <path id="Icon_feather-filter" data-name="Icon feather-filter"
+                        d="M18.278,4.5H3l6.111,7.226v5l3.056,1.528V11.726l1.173-1.318"
+                        transform="translate(-7449 -17103.375)" fill="#083668" stroke="#083668"
+                        [style.stroke]="column.headerColor" stroke-width="1" />
+                      <path id="Path_39619" data-name="Path 39619" d="M-7435.629-17095.65l1.731,1.674,4.112-4.781"
+                        transform="translate(-4355.311 1294.544) rotate(14)" fill="none" stroke="#5392d9"
+                        stroke-width="1.5"  />
+                    </g>
+                  </g>
+                </svg>
+              </button>
+            </span>
+
+            <span class="d-flex" *ngIf="gridConfig?.customizationGrid == true" style="padding: 0 4px">
+              <button>
+                <svg width="14px" fill="#224b78" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
+                  style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                  <g>
+                    <path d="M510.3,252.4l-81.7-64.4c-2-1.6-4.9-1.2-6.5,0.8c-0.6,0.8-1,1.8-1,2.9V233H279.1V90.9h41.5c3.8,0,6-4.5,3.6-7.5L259.7,1.8
+               c-1.5-2-4.4-2.4-6.4-0.8c-0.3,0.2-0.6,0.5-0.8,0.8l-64.5,81.7c-1.6,2-1.2,4.9,0.8,6.5c0.8,0.6,1.8,1,2.9,1H233V233H90.9v-41.5
+               c0-3.8-4.5-6-7.5-3.6L1.8,252.4c-2,1.5-2.4,4.4-0.8,6.4c0.2,0.3,0.5,0.6,0.8,0.8l81.6,64.5c3,2.4,7.5,0.3,7.5-3.6v-41.4h142.1
+               v142.1h-41.5c-3.8,0-6,4.5-3.6,7.5l64.5,81.6c1.9,2.4,5.4,2.4,7.2,0l64.5-81.6c2.4-3,0.3-7.5-3.6-7.5h-41.3V279.1h142.1v41.5
+               c0,3.8,4.5,6,7.5,3.6l81.6-64.5c2-1.6,2.4-4.5,0.8-6.6C510.8,252.8,510.6,252.6,510.3,252.4z" />
+                  </g>
+                </svg>
+
+              </button>
+            </span>
+
+
+
+          </div>
+
+
+        </th>
+
+        <!--TABLE COLUMNS -->
+        <td [style.position]="column.sticky ? 'sticky' : 'relative'"
+          [style.textAlign]="column.textAlign ? column.textAlign : 'left'" [style.left.px]="column.left"
+          class="{{ column.classList }}" [style.minWidth.px]="column.width" [style.width.px]="column.width"
+          [style.color]="column.cellColor" [style.fontWeight]="column.cellWeight" [style.maxWidth.px]="column.width"
+          [style.background]="column.cellBg" mat-cell *matCellDef="let element; let idx = index"
+          [ngClass]="{ 'col-nowrap': column.nowrap }">
+          <!-- <mat-checkbox  *ngIf="selectCheckbox"  (click)="$event.stopPropagation()"
+    (change)="$event ? selection.toggle(row) : null"
+    [checked]="selection.isSelected(row)">
+</mat-checkbox> -->
+          <ng-container *ngIf="!rowTemplate">
+            <ng-container [ngSwitch]="column?.columnDef">
+              <ng-container *ngSwitchCase="'select'">
+                <mat-checkbox [disabled]="column.disabled" (click)="$event.stopPropagation()"
+                  (change)="selectHandler($event, element)" [checked]="selection.isSelected(element)">
+                </mat-checkbox>
+              </ng-container>
+
+              <ng-container *ngSwitchDefault>
+                <span> {{ element[column.columnDef] }}</span>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+          <ng-container *ngIf="rowTemplate">
+            <ng-container [ngSwitch]="column?.columnDef">
+              <ng-container *ngSwitchCase="'select'">
+                <mat-checkbox [disabled]="column.disabled" (click)="$event.stopPropagation()"
+                  (change)="selectHandler($event, element)" [checked]="selection.isSelected(element)">
+                </mat-checkbox>
+              </ng-container>
+
+              <ng-container *ngSwitchDefault>
+                <ng-template [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{
+                  context: {
+                    row: element,
+                    index: idx,
+                    columnname: column.columnDef,
+                    column: column,
+                    header: column.header,
+                    value: element[column.columnDef],
+                    rowSelected: selection.isSelected(element),
+                    error: false,
+                    errorMsg: ''
+                  }
+                }"></ng-template>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </td>
+      </ng-container>
+
+
+      <!--TABLE ROWS -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let emprow; columns: displayedColumns; let rowIdx = index"
+        (dblclick)="viewClick(emprow)">
+      </tr>
+    </table>
+  </div>
+
+  <ng-container *ngIf="dataList && dataList?.length == 0" [ngTemplateOutlet]="noDataTemplate"></ng-container>
+
+
+
+  <!--TABLE PAGINATION -->
+<mat-paginator *ngIf="showPagination" class="bg-transparent" #paginator [pageSize]="pageSize"
+[pageSizeOptions]="itemperpageList" [showFirstLastButtons]="true" [length]="totalCount" [pageIndex]="pageIndex - 1"
+(page)="onPageEventChange($event)" [showFirstLastButtons]="true">
+</mat-paginator>
+
+
+</ng-template>
+
+
+
+<!--TABLE HEADER FILTER MENU TEMPLATE -->
+<ng-template #tablFilterMenuTemplate let-column="dataitem">
+  <app-inline-filter #genericInlineFilter [filterSourceData]="gridConfig?.filterData"
+    [column]="column"></app-inline-filter>
+</ng-template>
+
+
+
+<!--LISTING CARD TEMPLATE -->
+<ng-template #cardListRef>
+  <mg-generic-card-list  [cardItemPerPage]="cardItemPerPage"  [gridConfig]="gridConfig" [cardItemTemplate]="cardItemTemplate" [sourceData]="dataList">
+  </mg-generic-card-list>
+
+
+  <ng-container *ngIf="dataList && dataList?.length == 0" [ngTemplateOutlet]="noDataTemplate"></ng-container>
+
+
+
+  <!--card PAGINATION -->
+<mat-paginator *ngIf="showPagination" class="bg-transparent" #paginator [pageSize]="pageSize"
+[pageSizeOptions]="itemperpageList" [showFirstLastButtons]="true" [length]="totalCount" [pageIndex]="pageIndex - 1"
+(page)="onPageEventChange($event)" [showFirstLastButtons]="true">
+</mat-paginator>
+
+</ng-template>
+
+
+
+
+
+<ng-template #noDataTemplate>
+ 
+  <div class="no-data-template">
+    <div class="grid justify-items-center space-y-5 mt-10">
+    <figure>
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="532" height="310.432" viewBox="0 0 532 310.432">
+        <defs>
+          <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="0.405" gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#dcd9d9"/>
+            <stop offset="1" stop-color="#eee" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g id="Group_164428" data-name="Group 164428" transform="translate(-799 -416.568)">
+          <g id="Group_164426" data-name="Group 164426" transform="translate(-17 55.996)">
+            <g id="Group_164418" data-name="Group 164418" transform="translate(40 -55.996)">
+              <ellipse id="Ellipse_676" data-name="Ellipse 676" cx="266" cy="92.5" rx="266" ry="92.5" transform="translate(776 542)" fill="url(#linear-gradient)"/>
+              <g id="autumn-tree" transform="translate(824.672 521.889)" opacity="0.42">
+                <ellipse id="Ellipse_24" data-name="Ellipse 24" cx="14.149" cy="19.809" rx="14.149" ry="19.809" transform="translate(8.846 0)" fill="#cacaca"/>
+                <path id="Path_15195" data-name="Path 15195" d="M113.431,115.6a.9.9,0,0,0-1.792,0,4.586,4.586,0,0,1-1.362,3.482c-1.546,1.5-4.042,1.867-5.351,1.956V109.383a7.563,7.563,0,0,0,4.521-1.775,4.71,4.71,0,0,0,1.42-3.53.9.9,0,1,0-1.791,0,2.946,2.946,0,0,1-.868,2.237,5.666,5.666,0,0,1-3.281,1.268V102.16a.9.9,0,0,0-1.792,0v13.167a6.893,6.893,0,0,1-6.036-5.435.9.9,0,0,0-1.76.332,9.5,9.5,0,0,0,1.567,3.464,8.255,8.255,0,0,0,6.23,3.438v37.542a.9.9,0,1,0,1.792,0V122.831c1.524-.089,4.578-.518,6.59-2.46A6.37,6.37,0,0,0,113.431,115.6Z" transform="translate(-81.382 -89.17)" fill="#e6e6e6"/>
+                <ellipse id="Ellipse_25" data-name="Ellipse 25" cx="11.585" cy="16.219" rx="11.585" ry="16.219" transform="translate(30.555 9.696)" fill="#e4e2e2" opacity="0.89"/>
+                <path id="Path_15197" data-name="Path 15197" d="M283.155,174.634a.9.9,0,0,0-1.792,0,3.6,3.6,0,0,1-1.065,2.734,6.951,6.951,0,0,1-4.107,1.544v-9.217a6.254,6.254,0,0,0,3.652-1.483,4.013,4.013,0,0,0,1.212-3.007.9.9,0,0,0-1.792,0,2.259,2.259,0,0,1-.66,1.714,4.309,4.309,0,0,1-2.412.975v-4.259a.9.9,0,1,0-1.791,0v10.6a5.5,5.5,0,0,1-4.62-4.3.9.9,0,0,0-1.76.332,7.957,7.957,0,0,0,1.311,2.9,6.9,6.9,0,0,0,5.07,2.869V196.8a.9.9,0,1,0,1.791,0V180.71a8.809,8.809,0,0,0,5.346-2.049A5.372,5.372,0,0,0,283.155,174.634Z" transform="translate(-233.439 -143.302)" fill="#cacaca" opacity="0.89"/>
+              </g>
+              <g id="autumn-tree-2" data-name="autumn-tree" transform="translate(1212.764 554.997)" opacity="0.83">
+                <ellipse id="Ellipse_24-2" data-name="Ellipse 24" cx="7.854" cy="10.996" rx="7.854" ry="10.996" transform="translate(8.846 0)" fill="#cacaca"/>
+                <path id="Path_15195-2" data-name="Path 15195" d="M105.374,109.219a.5.5,0,1,0-.994,0,2.545,2.545,0,0,1-.756,1.933,4.933,4.933,0,0,1-2.97,1.086v-6.467a4.2,4.2,0,0,0,2.51-.985,2.614,2.614,0,0,0,.788-1.96.5.5,0,1,0-.994,0,1.636,1.636,0,0,1-.482,1.242,3.145,3.145,0,0,1-1.821.7v-3.011a.5.5,0,0,0-.994,0v7.309a3.826,3.826,0,0,1-3.351-3.017.5.5,0,0,0-.977.184,5.274,5.274,0,0,0,.87,1.923,4.582,4.582,0,0,0,3.458,1.908v14.178a.5.5,0,0,0,.994,0V113.236a5.935,5.935,0,0,0,3.658-1.366A3.536,3.536,0,0,0,105.374,109.219Z" transform="translate(-83.649 -94.551)" fill="#e6e6e6"/>
+                <ellipse id="Ellipse_25-2" data-name="Ellipse 25" cx="6.431" cy="9.003" rx="6.431" ry="9.003" transform="translate(20.897 5.382)" fill="#e4e2e2" opacity="0.89"/>
+                <path id="Path_15197-2" data-name="Path 15197" d="M276.414,169.341a.5.5,0,1,0-.994,0,2,2,0,0,1-.591,1.517,3.859,3.859,0,0,1-2.28.857V166.6a3.471,3.471,0,0,0,2.027-.823,2.227,2.227,0,0,0,.673-1.669.5.5,0,0,0-.995,0,1.254,1.254,0,0,1-.367.952,2.392,2.392,0,0,1-1.339.541v-2.364a.5.5,0,1,0-.994,0v5.882a3.052,3.052,0,0,1-2.565-2.385.5.5,0,0,0-.977.184,4.418,4.418,0,0,0,.728,1.611,3.829,3.829,0,0,0,2.814,1.592v11.526a.5.5,0,1,0,.994,0v-8.931a4.89,4.89,0,0,0,2.968-1.137A2.982,2.982,0,0,0,276.414,169.341Z" transform="translate(-244.882 -151.949)" fill="#cacaca" opacity="0.89"/>
+              </g>
+              <g id="Group_158582" data-name="Group 158582" transform="translate(1154 486.351)" opacity="0.23" style="mix-blend-mode: luminosity;isolation: isolate">
+                <g id="Group_29655" data-name="Group 29655" transform="translate(8 3)">
+                  <g id="Group_29650" data-name="Group 29650">
+                    <path id="Path_23577" data-name="Path 23577" d="M1633.358,543.483h0l.006-.023c.007-.019.014-.039.019-.058l.589-2.495.276,1.288a5.017,5.017,0,0,1,1.6-1.382,11.514,11.514,0,0,1,10.416,0,5.024,5.024,0,0,1,1.6,1.382l.235-1.247.262,1.076c.007.02.249,1.078.256,1.1l.006.022c.414,1.325-.585,2.95-2.359,3.974a11.512,11.512,0,0,1-10.416,0c-1.774-1.024-2.9-2.31-2.491-3.635" transform="translate(-1586.713 -499.401)" fill="#81bbfc"/>
+                    <path id="Path_23578" data-name="Path 23578" d="M1644.456,587.447l.342,2.646,3.148-1.73-.624-2.346Z" transform="translate(-1586.946 -541.681)" fill="#81bbfc"/>
+                    <path id="Path_23579" data-name="Path 23579" d="M1631.189,541.475l.7-2.752.485,1.075a5.575,5.575,0,0,1,1.4-1.106,11.748,11.748,0,0,1,10.614,0,5.607,5.607,0,0,1,1.387,1.1l.537-.917.26,1.138c.006.016.007.021.142.607.056.243.109.476.122.518.435,1.392-.573,3.12-2.448,4.2a11.744,11.744,0,0,1-10.614,0c-2.069-1.195-2.986-2.567-2.58-3.864m.754-1.456.134.277-.1-.444Zm14.506,1.214c0-.01-.061-.263-.123-.528s-.125-.546-.135-.585l-.048-.19-.152.8-.267-.374a4.822,4.822,0,0,0-1.538-1.326,11.311,11.311,0,0,0-10.22,0,4.8,4.8,0,0,0-1.538,1.326l-.19.266.268.548,2.026,1.528,3.208.873-.179,2.549a12.545,12.545,0,0,0,1.515.095v-2.526l.74-.057.1,2.551a10,10,0,0,0,4.269-1.189c1.716-.99,2.649-2.53,2.263-3.765" transform="translate(-1584.732 -497.453)" fill="#1c355e"/>
+                    <path id="Path_23580" data-name="Path 23580" d="M1641.382,516.37c-2.781,1.605-2.781,4.208,0,5.813a11.126,11.126,0,0,0,10.068,0c2.78-1.605,2.78-4.208,0-5.813a11.128,11.128,0,0,0-10.068,0" transform="translate(-1592.072 -477.193)" fill="#85b4e8"/>
+                    <path id="Path_23581" data-name="Path 23581" d="M1651.857,526.044c-2.4,1.387-2.4,3.637,0,5.024a9.619,9.619,0,0,0,8.7,0c2.4-1.388,2.4-3.637,0-5.024a9.62,9.62,0,0,0-8.7,0" transform="translate(-1601.865 -486.147)" fill="#81bbfc"/>
+                    <path id="Path_23582" data-name="Path 23582" d="M1639.288,514.253a11.362,11.362,0,0,1,10.265,0,3.26,3.26,0,0,1,0,6.154,11.361,11.361,0,0,1-10.265,0,3.26,3.26,0,0,1,0-6.154m.879.453a2.461,2.461,0,0,0,0,4.683,9.417,9.417,0,0,0,8.506,0,2.46,2.46,0,0,0,0-4.683,9.413,9.413,0,0,0-8.506,0m-.682,5.36a10.926,10.926,0,0,0,9.871,0,2.877,2.877,0,0,0,0-5.472,7.215,7.215,0,0,0-.78-.382c.1.05.2.1.293.153a2.843,2.843,0,0,1,0,5.365,9.848,9.848,0,0,1-8.9,0,2.844,2.844,0,0,1,0-5.365c.095-.054.2-.1.295-.153a7.362,7.362,0,0,0-.78.382,2.877,2.877,0,0,0,0,5.472" transform="translate(-1590.075 -475.246)" fill="#414242"/>
+                    <path id="Path_23583" data-name="Path 23583" d="M1675.258,518.948h0a2.288,2.288,0,0,1,.424-.443l1.674-1.748h2.951l1.851,1.89.153.163c.887.857.542,1.82-.736,2.558a6.045,6.045,0,0,1-5.468,0c-1.133-.654-1.416-1.614-.848-2.42" transform="translate(-1624.544 -478.641)" fill="#508cce"/>
+                    <path id="Path_23584" data-name="Path 23584" d="M1676.848,520.22a5.789,5.789,0,0,0,2.832-.676,2.32,2.32,0,0,0,1.319-1.576,1.534,1.534,0,0,0-.544-1.294l-.146-.156-1.913-1.953h-3.116l-1.733,1.809a2.347,2.347,0,0,0-.442.466l.161.114-.161-.114a1.593,1.593,0,0,0-.286,1.281,2.294,2.294,0,0,0,1.2,1.423,5.794,5.794,0,0,0,2.833.676m1.384-5.261,1.943,1.991a1.16,1.16,0,0,1,.434.97,2,2,0,0,1-1.125,1.283,5.835,5.835,0,0,1-5.271,0,1.913,1.913,0,0,1-1.007-1.168,1.2,1.2,0,0,1,.222-.969h0a2.041,2.041,0,0,1,.387-.4l1.633-1.7Z" transform="translate(-1622.552 -476.646)" fill="#414242"/>
+                    <path id="Path_23585" data-name="Path 23585" d="M1703.033,508.829a.639.639,0,0,0,0,1.212,2.319,2.319,0,0,0,2.1,0,.64.64,0,0,0,0-1.212,2.319,2.319,0,0,0-2.1,0" transform="translate(-1649.786 -471.196)" fill="#81bbfc"/>
+                    <path id="Path_23586" data-name="Path 23586" d="M1703.182,514.815a.639.639,0,0,0,0,1.212,2.321,2.321,0,0,0,2.1,0,.639.639,0,0,0,0-1.212,2.317,2.317,0,0,0-2.1,0" transform="translate(-1649.949 -476.645)" fill="#81bbfc"/>
+                    <path id="Path_23587" data-name="Path 23587" d="M1702.089,508.479a2.343,2.343,0,0,0,1.148-.278.832.832,0,0,0,0-1.553,2.5,2.5,0,0,0-2.3,0,.832.832,0,0,0,0,1.553,2.338,2.338,0,0,0,1.147.278m0-1.713a1.95,1.95,0,0,1,.95.223.45.45,0,0,1,0,.87,2.136,2.136,0,0,1-1.9,0,.45.45,0,0,1,0-.87,1.955,1.955,0,0,1,.951-.223" transform="translate(-1647.794 -469.186)" fill="#414242"/>
+                    <path id="Path_23588" data-name="Path 23588" d="M1739.89,280.509h0a.393.393,0,0,0,.392-.4l-.079-22.862-.764,2.748c-.017.06-1.709,6.044-4.781,7.888-2.981,1.789-6.426-.861-6.459-.888l-.449-.351-.17.543c-.017.053-1.713,5.346-5.467,7.934a5.876,5.876,0,0,1-6.748.239l-.472.63a6.689,6.689,0,0,0,7.667-.221c3.319-2.288,5.068-6.407,5.6-7.843,1.113.722,4.112,2.308,6.906.632,2.1-1.259,3.556-4.125,4.369-6.149l.063,17.7a.393.393,0,0,0,.4.393" transform="translate(-1685.606 -242.441)" fill="#414242"/>
+                    <path id="Path_23589" data-name="Path 23589" d="M1986.055,442.358l-13.784,27.715-1.28-18.33Z" transform="translate(-1954.38 -410.924)" fill="#d5d5d5"/>
+                    <path id="Path_23590" data-name="Path 23590" d="M1966.92,465.389l14.415-28.986-15.753,9.816.008.118Zm13.444-27.916-13.152,26.445-1.222-17.49Z" transform="translate(-1949.173 -405.503)" fill="#414242"/>
+                    <path id="Path_23591" data-name="Path 23591" d="M1595.336,200.525l59.374-35.461-4.15-2.4-61.42,34.28Z" transform="translate(-1588.742 -156.351)" fill="#d5d5d5"/>
+                    <path id="Path_23592" data-name="Path 23592" d="M1648.515,189.014l-2.025,3.7-52.921,33.861-4.429-2.066Z" transform="translate(-1582.547 -180.331)" fill="#d5d5d5"/>
+                    <path id="Path_23593" data-name="Path 23593" d="M1600.857,207.9l59.374-35.461-3.606-2.08-61.421,34.28,1.6,40.8h5.108" transform="translate(-1594.807 -163.353)" fill="#f2f2f2" stroke="rgba(0,0,0,0)" stroke-width="1"/>
+                    <path id="Path_23594" data-name="Path 23594" d="M1593.15,198.234l-6.2-3.583,61.723-34.449.1-.054,4.121,2.379.224.129-.074.27-2,3.648-17.961,11.493h0l-2,1.281h0l-33,21.115-.092.058-4.432-2.067-.01.006-.093-.054-.329-.153Zm.388-.231,20.419-12.206-5.064-2.944-21.151,11.8Zm37.332-22.315-4.451-2.617-17.127,9.559,5.052,2.937Zm.385-.23,1.218-.728-4.437-2.561-1.219.68Zm17.507-14.857-20.324,11.343,4.422,2.553,19.638-11.739Zm1.978,5.7,1.628-2.972-19.292,11.523V177.6Zm-19.273,12.331,1.214-.776v-2.769l-1.214.725Zm-.393-2.586-16.524,9.869.016,3.532,16.508-10.563Zm-16.9,13.652-.014-3.549-20.2,12.064,3.994,1.863Z" transform="translate(-1586.946 -154.057)" fill="#414242"/>
+                    <path id="Path_23595" data-name="Path 23595" d="M1950.74,384.636v-.912l-4.335,2.533.084.848Z" transform="translate(-1916.856 -357.555)" fill="#d5d5d5"/>
+                    <path id="Path_23596" data-name="Path 23596" d="M1946.4,358.848l4.253,2.454,4.25-2.454-4.25-2.454Z" transform="translate(-1921.023 -332.679)" fill="#d5d5d5"/>
+                    <path id="Path_23597" data-name="Path 23597" d="M1962.293,367.2l2.824,1.631,2.823-1.631-2.823-1.63Z" transform="translate(-1935.484 -341.029)" fill="#d5d5d5"/>
+                    <path id="Path_23598" data-name="Path 23598" d="M1953.515,359.7,1957.51,362l-4.224,2.47-4.021-2.321Zm0,3.788,2.41-1.484-2.41-1.72-2.781,1.547Z" transform="translate(-1923.883 -335.686)" fill="#f2f2f2"/>
+                    <path id="Path_23599" data-name="Path 23599" d="M1945.46,357.808h0l.084-.049,4.252-2.454,4.251,2.454.085.049v1.035l-4.251,2.458-.084.049-.086-.049-4.251-2.426v-1.067Zm4.421,3.3,4.082-2.36V358l-4.082,2.357Zm-.085-.892,4.082-2.356L1949.8,355.5l-4.081,2.357Z" transform="translate(-1920.162 -331.688)" fill="#414242"/>
+                    <path id="Path_23600" data-name="Path 23600" d="M1960.532,366.28l-.127-.073,2.908-1.679.085-.049,2.994,1.728-2.994,1.728-2.582-1.491-.284-.164Zm2.781-1.557-2.569,1.484.442.255,2.128-1.2Zm2.129,1.837-2.044-1.155-2.043,1.155,2.043,1.179Z" transform="translate(-1933.766 -340.037)" fill="#414242"/>
+                    <path id="Path_23601" data-name="Path 23601" d="M1599.042,108.558l-4.169-2.34-5.734,3.311,4.168,2.34Z" transform="translate(-1533.074 -104.97)" fill="#d5d5d5"/>
+                    <path id="Path_23602" data-name="Path 23602" d="M1599.042,117.169l-4.169-2.34-5.734,3.311,4.168,2.34Z" transform="translate(-1533.074 -112.808)" fill="#f2f2f2"/>
+                    <path id="Path_23603" data-name="Path 23603" d="M1633.443,113.437c1.731-1.245,3.57-3.843,3.57-6.2v-.114l5.929-3.423.2.111v.451l-.2-.11-5.337,3.082,3.768,2.116,1.764-1.019v.7l-.248,4.1-4.909,3.947-4.623-2.722V113.5Z" transform="translate(-1581.144 -102.675)" fill="#414242"/>
+                    <path id="Path_23604" data-name="Path 23604" d="M1592.551,135.59l5.734-3.311v5.1l-9.144,5.476v-.641a9.1,9.1,0,0,0,3.411-6.62" transform="translate(-1532.316 -128.691)" fill="#d5d5d5"/>
+                    <path id="Path_23605" data-name="Path 23605" d="M1591.112,109.686l-4.165-2.338v-.228l5.93-3.423,4.168,2.34.2.111v5.322l-9.539,5.712v-1.089l.082-.059a8.99,8.99,0,0,0,3.325-6.347m1.768-5.537-5.338,3.082,3.769,2.116,5.339-3.082Zm-4.781,12.337,8.752-5.24V106.6l-3.781,2.183-1.561.9a9.316,9.316,0,0,1-3.41,6.605Z" transform="translate(-1531.08 -102.675)" fill="#414242"/>
+                    <path id="Path_23606" data-name="Path 23606" d="M1677.691,181.231l.233-.57a.935.935,0,1,1,1.73.709l-.232.569a.932.932,0,0,1-.5.509.935.935,0,0,1-1.228-1.217" transform="translate(-1621.702 -172.2)" fill="#d5d5d5"/>
+                    <path id="Path_23607" data-name="Path 23607" d="M1688.676,184.987h0a.708.708,0,1,0-.708-.708.709.709,0,0,0,.708.708" transform="translate(-1632.292 -175.376)" fill="#d5d5d5"/>
+                    <path id="Path_23608" data-name="Path 23608" d="M1686.26,182.813a.947.947,0,1,0-.947-.947.948.948,0,0,0,.947.947m0-1.417a.47.47,0,1,1-.47.47.471.471,0,0,1,.47-.47" transform="translate(-1629.876 -172.964)" fill="#414242"/>
+                    <path id="Path_23609" data-name="Path 23609" d="M1597.7,164.119l1.724-1v-1.99l-1.724,1Zm1.428-1.165-1.133.654V162.3l1.133-.654Z" transform="translate(-1534.228 -154.955)" fill="#414242"/>
+                    <path id="Path_23610" data-name="Path 23610" d="M1592.412,122.686v-.944l-4.488,2.622.088.877Z" transform="translate(-1526.334 -119.1)" fill="#d5d5d5"/>
+                    <path id="Path_23611" data-name="Path 23611" d="M1587.924,95.994l4.4,2.54,4.4-2.54-4.4-2.54Z" transform="translate(-1530.647 -93.352)" fill="#d5d5d5"/>
+                    <path id="Path_23612" data-name="Path 23612" d="M1604.37,104.636l2.923,1.688,2.923-1.688-2.923-1.688Z" transform="translate(-1545.616 -101.995)" fill="#d5d5d5"/>
+                    <path id="Path_23613" data-name="Path 23613" d="M1595.285,96.873l4.134,2.387-4.374,2.556-4.161-2.4Zm0,3.921,2.494-1.536-2.494-1.78-2.879,1.6Z" transform="translate(-1533.608 -96.465)" fill="#f2f2f2"/>
+                    <path id="Path_23614" data-name="Path 23614" d="M1586.947,94.917h0l.087-.051,4.4-2.54,4.4,2.54.088.051v1.072l-4.4,2.544-.087.05-.089-.05-4.4-2.511V94.917Zm4.575,3.413,4.225-2.443V95.12l-4.225,2.439Zm-.088-.923,4.225-2.439-4.225-2.439-4.225,2.439Z" transform="translate(-1529.757 -92.326)" fill="#414242"/>
+                    <path id="Path_23615" data-name="Path 23615" d="M1602.548,103.686l-.132-.076,3.011-1.738.088-.051,3.1,1.789-3.1,1.789-2.672-1.543Zm2.879-1.612-2.66,1.536.457.264,2.2-1.245Zm2.2,1.9-2.114-1.2-2.115,1.2,2.115,1.221Z" transform="translate(-1543.838 -100.968)" fill="#414242"/>
+                  </g>
+                  <path id="Path_23616" data-name="Path 23616" d="M-3805.839,6023.7l1.345,41.1h5.457l-.983-38.1" transform="translate(3806.281 -5982.658)" fill="none" stroke="#414242" stroke-width="1"/>
+                </g>
+              </g>
+            </g>
+            <g id="Group_164420" data-name="Group 164420" transform="translate(-318.364 345.298) rotate(-10)" style="mix-blend-mode: luminosity;isolation: isolate">
+              <path id="Path_18063" data-name="Path 18063" d="M52.21,246.538s-11.684-.635-24.64-.915-25.085.031-25.085.031S0,244.664,0,244.306s1.041-.984,1.041-.984H53.46s1.041.626,1.041.984a9.214,9.214,0,0,1-1.193,1.946" transform="translate(1212.4 124.894)" fill="#adafbe"/>
+              <path id="Path_18064" data-name="Path 18064" d="M3.441,148.856H55.859l4.961-7.442H52.574s-6.044,3.3-9.357,3.3H12.372L10.9,143.8H2.707a8.311,8.311,0,0,0,.734,5.052" transform="translate(1210.001 216.693)" fill="#dfdfdf"/>
+              <path id="Path_18065" data-name="Path 18065" d="M62.764,204.828H57.606l-2.1,1.6H8.016l1.149,4.4H59.452Z" transform="translate(1204.97 157.91)" fill="#adafbe"/>
+              <rect id="Rectangle_9480" data-name="Rectangle 9480" width="5.097" height="4.918" transform="translate(1214.65 355.576)" fill="#c7c7c7"/>
+              <rect id="Rectangle_9481" data-name="Rectangle 9481" width="1.292" height="3.589" transform="translate(1213.358 356.904)" fill="#fbfffa"/>
+              <rect id="Rectangle_9482" data-name="Rectangle 9482" width="4.482" height="0.323" transform="translate(1215.66 360.171)" fill="#b3b3b3"/>
+              <rect id="Rectangle_9483" data-name="Rectangle 9483" width="5.456" height="0.61" transform="translate(1214.471 354.966)" fill="#ccc"/>
+              <rect id="Rectangle_9484" data-name="Rectangle 9484" width="4.487" height="0.718" transform="translate(1215.153 354.248)" fill="#e1e1e1"/>
+              <rect id="Rectangle_9485" data-name="Rectangle 9485" width="4.702" height="0.395" transform="translate(1215.045 353.853)" fill="#ccc"/>
+              <rect id="Rectangle_9486" data-name="Rectangle 9486" width="0.176" height="3.302" transform="translate(1218.17 350.551)" fill="#d9d9d9"/>
+              <rect id="Rectangle_9487" data-name="Rectangle 9487" width="0.258" height="1.339" transform="translate(1216.488 352.514)" fill="#d9d9d9"/>
+              <rect id="Rectangle_9488" data-name="Rectangle 9488" width="2.443" height="0.12" transform="translate(1216.127 352.634)" fill="#d9d9d9"/>
+              <rect id="Rectangle_9489" data-name="Rectangle 9489" width="0.662" height="0.662" transform="translate(1218.648 355.984)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9490" data-name="Rectangle 9490" width="0.662" height="0.662" transform="translate(1217.571 355.984)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9491" data-name="Rectangle 9491" width="0.662" height="0.662" transform="translate(1216.493 355.984)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9492" data-name="Rectangle 9492" width="0.662" height="0.662" transform="translate(1218.648 356.992)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9493" data-name="Rectangle 9493" width="0.662" height="0.662" transform="translate(1217.571 356.992)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9494" data-name="Rectangle 9494" width="0.662" height="0.662" transform="translate(1216.493 356.992)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9495" data-name="Rectangle 9495" width="0.662" height="0.662" transform="translate(1218.648 358)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9496" data-name="Rectangle 9496" width="0.662" height="0.662" transform="translate(1217.571 358)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9497" data-name="Rectangle 9497" width="0.662" height="0.662" transform="translate(1218.648 359.07)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9498" data-name="Rectangle 9498" width="0.662" height="0.662" transform="translate(1217.571 359.07)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9499" data-name="Rectangle 9499" width="0.662" height="0.662" transform="translate(1213.673 357.323)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9500" data-name="Rectangle 9500" width="0.662" height="0.662" transform="translate(1213.673 358.368)" fill="#9f9d9d"/>
+              <path id="Path_18067" data-name="Path 18067" d="M489.589,17.106a.09.09,0,0,1-.066-.151l9.366-10.132a.09.09,0,0,1,.1-.023c.034.013.147-.158.147-.121l-.09,12.137a.09.09,0,1,1-.179,0l.09-11.908-9.3,10.168a.089.089,0,0,1-.066.029" transform="translate(758.647 341.593)" fill="#b0b0b0"/>
+              <rect id="Rectangle_9501" data-name="Rectangle 9501" width="0.662" height="0.662" transform="translate(1216.493 358)" fill="#9f9d9d"/>
+              <rect id="Rectangle_9502" data-name="Rectangle 9502" width="1.158" height="3.558" transform="translate(1228.726 357.851)" fill="#81bbfc"/>
+              <path id="Path_18068" data-name="Path 18068" d="M227.236,79.122V76.863h-.727v4.518h.727V79.423H234.7v-.3Z" transform="translate(1002.433 276.529)" fill="#81bbfc"/>
+              <path id="Path_18069" data-name="Path 18069" d="M333.362,112.459l.175-.541h-.407v5.5" transform="translate(903.599 244.035)" fill="#eba24b" stroke="rgba(0,0,0,0)" stroke-width="1"/>
+              <rect id="Rectangle_9503" data-name="Rectangle 9503" width="0.215" height="1.265" transform="translate(1228.726 356.646)" fill="#b0b0b0"/>
+              <path id="Path_18070" data-name="Path 18070" d="M242.83,79.2a.09.09,0,0,1-.025,0l-7.368-2.172a.09.09,0,0,1,.051-.172l7.368,2.172a.09.09,0,0,1-.025.176" transform="translate(994.217 276.545)" fill="#b0b0b0"/>
+              <rect id="Rectangle_9504" data-name="Rectangle 9504" width="1.423" height="4.372" transform="translate(1246.813 357.036)" fill="#b1afaf"/>
+              <path id="Path_18071" data-name="Path 18071" d="M477.023,6.48V3.7h-.679V9.257h.679V6.85L487.045.37V0Z" transform="translate(770.842 347.78)" fill="#b1afaf"/>
+              <path id="Path_18072" data-name="Path 18072" d="M616.315,5.625l.214-.664h-.5Z" transform="translate(641.358 343.181)" fill="#eba24b"/>
+              <rect id="Rectangle_9505" data-name="Rectangle 9505" width="0.265" height="1.555" transform="translate(1246.549 359.854)"/>
+              <rect id="Rectangle_9511" data-name="Rectangle 9511" width="4.379" height="1.555" transform="translate(1245.096 359.854)" fill="#b1afaf"/>
+              <rect id="Rectangle_9524" data-name="Rectangle 9524" width="58.42" height="25.072" transform="translate(1212.401 347.78)" fill="none"/>
+            </g>
+            <g id="Group_164424" data-name="Group 164424" transform="translate(9.961 -18)">
+              <g id="Group_164423" data-name="Group 164423" opacity="0.82">
+                <g id="_4975312_docs_document_format_page_word_icon" data-name="4975312_docs_document_format_page_word_icon" transform="translate(955.333 378.572)">
+                  <path id="Path_39668" data-name="Path 39668" d="M182.746,42.415V144.88a9.977,9.977,0,0,1-9.976,9.976H80.565a9.975,9.975,0,0,1-9.976-9.976V9.976A9.974,9.974,0,0,1,80.565,0h59.766Z" fill="#b0b0b0"/>
+                  <path id="Path_39671" data-name="Path 39671" d="M168.748,38.129v92.113a8.853,8.853,0,0,1-8.731,8.968H79.32a8.851,8.851,0,0,1-8.731-8.968V8.968A8.85,8.85,0,0,1,79.32,0h52.307Z" transform="translate(6.999 8.786)" fill="#dfdfdf"/>
+                  <g id="Group_164419" data-name="Group 164419" transform="translate(97.989 77.747)">
+                    <rect id="Rectangle_153959" data-name="Rectangle 153959" width="57.353" height="6.373" transform="translate(0)" fill="#fff"/>
+                    <rect id="Rectangle_153960" data-name="Rectangle 153960" width="57.353" height="6.373" transform="translate(0 14.233)" fill="#fff"/>
+                    <rect id="Rectangle_153961" data-name="Rectangle 153961" width="57.353" height="6.373" transform="translate(0 28.466)" fill="#fff"/>
+                    <rect id="Rectangle_153962" data-name="Rectangle 153962" width="40.787" height="6.373" transform="translate(0 42.699)" fill="#fff"/>
+                  </g>
+                  <path id="Path_39669" data-name="Path 39669" d="M320.31,125.172l36.628,15.09V126.094l-20.767-6.132Z" transform="translate(-174.192 -83.679)" fill="#9a9a9a"/>
+                  <path id="Path_39670" data-name="Path 39670" d="M343.592,42.415H311.153a9.974,9.974,0,0,1-9.976-9.976V0Z" transform="translate(-160.846)" fill="#f2f0f0"/>
+                </g>
+                <circle id="Ellipse_809" data-name="Ellipse 809" cx="18" cy="18" r="18" transform="translate(1010 414)" fill="#b0b0b0"/>
+              </g>
+              <circle id="Ellipse_810" data-name="Ellipse 810" cx="13" cy="13" r="13" transform="translate(1015 419)" fill="#fff"/>
+              <g id="Group_164422" data-name="Group 164422" transform="translate(0.311 -0.122)">
+                <path id="Path_39672" data-name="Path 39672" d="M15544.021-12714.34l9.338-9.338" transform="translate(-14521.001 13151)" fill="none" stroke="#707070" stroke-width="2"/>
+                <path id="Path_39673" data-name="Path 39673" d="M0,9.338,9.338,0" transform="translate(1032.358 427.322) rotate(90)" fill="none" stroke="#707070" stroke-width="2"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>
+      
+    </figure>
+
+
+      <div class="text-[#083668] text-2xl font-bold text-center">
+            {{"No Data Found" | translang}}
+        </div>
+        <div class="text-center text-[#083668]">
+            {{"Please adjust your search and filters criteria" | translang}}
+        </div>
+        <div class="text-center">
+            <button (click)="clearAllFilter()" class="bg-[#083668] p-2 text-center text-white"> {{"Clear Filter" | translang}} </button>
+        </div>
+    </div>
+</div>
+</ng-template>
+
+
+</div>

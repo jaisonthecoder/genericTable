@@ -1,0 +1,167 @@
+@import "../../assets/scss/generic-table-styles.scss";
+
+
+.generic-table-customization {
+  color: #ffffff;
+  font-weight: normal;
+  .columnlistMenu {
+    display: flex;
+    column-gap: 10px;
+    flex-wrap: wrap;
+    row-gap: 10px;
+    label {
+      border: 1px solid #ffffff;
+      border-radius: 4px;
+      span {
+        text-align: center;
+        padding: 3px 0px;
+        display: inline-block; /* or block */
+        padding: 10px;
+        line-height: normal;
+        cursor: pointer;
+        padding: 3px 14px;
+        border-radius: 4px;
+
+        &.isDefault {
+          border-color: #5392d9;
+          background-color: #5392d9;
+          color: #fff;
+          
+        }
+      }
+    }
+  }
+
+
+  .pcs-general-listing {
+    > table {
+      > tbody{
+        td{
+          pointer-events: none !important;
+        }
+      }
+    }
+  }
+
+  label:hover {
+    border-color: #5392d9;
+    background-color: #77a4d6;
+    color: #fff;
+  }
+  label.isSelected {
+    border-color: #5392d9;
+    background-color: #5392d9;
+    color: #fff;
+  }
+
+  .cursor_notAllowed {
+    cursor: not-allowed;
+    * {
+      cursor: not-allowed !important;
+    }
+  }
+
+  .box {
+    display: flex;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #fff;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .submitCustomizationBtn {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    text-align: center;
+    background: #5392d9;
+    color: #fff;
+    border-radius: 6px;
+  }
+
+  .customiseTableSelect {
+    border: 1px solid #ddd;
+    border-radius: 0;
+    padding: 10px;
+    width: 150px;
+    background-color: #fff;
+  }
+}
+
+::ng-deep {
+  .generic-table-customization {
+  .pcs-general-listing {
+    > table {
+      > tbody{
+        td{
+          pointer-events: none !important;
+        }
+      }
+    }
+  }
+}
+
+
+  .mg-generic-table-dialog-window {
+    mat-dialog-container {
+      background: #03356dde !important;
+      border-radius: 0px !important;
+      opacity: 1;
+
+      .modal-header{
+        display: flex;
+        justify-content: space-between;
+        .modal-title{
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+       .selectColumnTitle{
+        padding: 1rem 0;
+        font-size: 1rem;
+       }
+      .itemPerPageBlock{
+        padding: 1rem 0;
+
+        select {
+          width: 100px;
+          color: #222;
+          padding: 0 1rem;
+          border: 10px solid #fff;
+          outline: none!important;
+      }
+      }
+
+
+      .mat-paginator .mat-paginator-container {
+        // justify-content: flex-end;
+        background-color: #fff;
+    }
+
+
+    .mat-paginator .mat-paginator-container {
+      // justify-content: flex-end;
+  }
+
+  .mat-paginator-page-size {
+    display: none!important;
+}
+  }
+}

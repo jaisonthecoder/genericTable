@@ -1,0 +1,137 @@
+@import "../../assets/scss/generic-table-styles.scss";
+
+.mg-generic-inline-filter{
+    background: #fff;
+    font-size: 12px;
+    svg{
+        max-width: 24px;
+    }
+    .top-section{
+        display: flex;
+        gap: 10px;
+        padding: 0.6rem;
+        background-color: var(--mgGt-bg-blue);
+        justify-content: space-between;
+
+        button{
+            font-size: 12px;
+            display: flex;
+            gap:5px
+        }
+    }
+
+    .searchbox-section{
+      
+        padding: 0.6rem;
+       
+
+        .searchbox-input{
+            border:1px solid rgb(148, 163, 184);
+            padding: 0.4rem;
+            display: flex;
+            gap: 10px;
+            
+        }
+
+        input{
+            outline: none !important;
+            border:none !important;
+        }
+    }
+
+    .data-list-section{
+        display: flex;
+        gap: 0px;
+        padding: 0.6rem;
+        flex-direction: column;
+         .list-item{
+            border-bottom: 1px solid #eee;
+            padding: 0.5rem 0;
+            display: flex;
+            gap:5px;
+         }
+
+        .mat-option {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            line-height: 48px;
+            height: 48px;
+            padding: 0 16px;
+            text-align: left;
+            text-decoration: none;
+            max-width: 100%;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            flex-direction: row;
+            max-width: 100%;
+            box-sizing: border-box;
+            align-items: center;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+    }
+
+    .footer-section{
+        display: flex;
+        gap: 10px;
+        padding: 0.6rem;
+    }
+
+    .no-data-list-section{
+        display: flex;
+        gap: 10px;
+        padding: 1rem;
+    }
+
+
+}
+
+::ng-deep{
+    .mat-option, .mat-mdc-option {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        line-height: 48px;
+        height: 48px;
+        padding: 0 16px;
+        text-align: left;
+        text-decoration: none;
+        max-width: 100%;
+        position: relative;
+        cursor: pointer;
+        outline: none;
+        display: flex;
+        flex-direction: row;
+        max-width: 100%;
+        box-sizing: border-box;
+        align-items: center;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+
+
+    .mat-menu-panel{
+        &:lang(ar-AE){
+            max-width: 300px !important;
+        }
+
+    }
+}
+
+.error-text{
+    color: darkred;
+    font-size: 10px;
+    display: block;
+}
+
+::ng-deep{
+    html[dir='rtl'] {
+    // .cdk-overlay-connected-position-bounding-box {
+    //     direction: ltr !important;
+    //     align-items: unset !important;
+    //   }
+    }
+}

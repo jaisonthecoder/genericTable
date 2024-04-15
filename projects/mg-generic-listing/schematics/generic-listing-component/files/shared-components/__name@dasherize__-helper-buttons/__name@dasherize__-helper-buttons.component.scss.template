@@ -1,0 +1,41 @@
+.table-action-wrap{
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 5px;
+    z-index: 9;
+    gap: 5px;
+    height: 100%;
+    justify-content: center;
+    :lang('ar-AE'){
+        left: 5px;
+        right: auto;
+    }
+
+    button{
+        width: 3rem;
+        height: 3rem;
+        background-color:#e1e1e1;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    
+         svg, img{
+            width:100%;
+            height: 100%;
+           
+         }
+    }
+}
+
+
+::ng-deep{
+html[dir=rtl]  {
+    .table-action-wrap{
+        left: 5px;
+        right: auto;
+    }
+}
+}

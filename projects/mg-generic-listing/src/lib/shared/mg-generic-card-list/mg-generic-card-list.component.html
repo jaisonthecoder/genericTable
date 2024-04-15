@@ -1,0 +1,20 @@
+
+<div class="flex flex-col flex-auto min-w-0 card-list-component">
+    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+        <div class="w-full mx-auto">
+            <div class="{{gridClasses}}">
+                <ng-container *ngFor="let request of sourceData; let idx = index;">                   
+                        <ng-template [ngTemplateOutlet]="cardItemTemplate" [ngTemplateOutletContext]="{
+                            context: {
+                              item: request,
+                              index: idx, 
+                              error: false,
+                              errorMsg: ''
+                            }
+                          }">
+                        </ng-template>               
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

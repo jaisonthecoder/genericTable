@@ -1,0 +1,89 @@
+<header>
+  <h2 class="d-flex"><span>GENERAL LISTING COMPONENT</span></h2>
+</header>
+<div>
+
+
+    <!-- <app-generic-table-advance-search  [searchItemCount]="2"    [translationService]="_transLocoService"  [searchLookupServiceSource]="inlineFilterService" [tableColumn]="gridConfig?.columnDefinition"  (onAdvanceSearch)="onApplyAdvanceSearch($event)"   (onGlobalSearch)="onApplyGlobalSearch($event)">
+
+    </app-generic-table-advance-search> -->
+    
+    <button (click)="customizTable();">Customize Table</button> &nbsp;
+    <button (click)="switchView();">Switch View</button> &nbsp;
+    <button (click)="changeLang();">Change Lang</button>
+    <mg-generic-listing-table  #genericTable   *ngIf="showTable"
+        [dataList]="gridConfig?.dataList"
+        [rowTemplate]="tableRowTemp"
+        [headerTemplate]="tableHeaderTemp"
+        [showGlobalSearch]="true"
+        [showPagination]="true"
+        [showAdvanceSearch]="true"
+        [multiSelect]="true"
+        [gridConfig]="gridConfig"
+        (onGridDataChange)="getGridData($event)"
+        (onPageChanges)="onGridPageChanges($event)"
+        (onSelectItem)="onSelectItem($event)"
+        (onUnSelectItem)="onUnSelectItem($event)"  
+        (onMenuFilterChanges)="onMenuFilterChanges($event)" 
+        (onAdvanceSearch)="onApplyAdvanceSearch($event)"
+        (onGlobalSearch)="onApplyGlobalSearch($event)"
+        (onSort)="onSortOrderChange($event)"  
+        [inlineFilterServiceSource]="inlineFilterService"
+        (afterCustomizeTable)="afterCustomizeTableFn($event)" 
+        [cardItemTemplate]="cardItemTemplate"
+        [translationService]="_transLocoService"
+        [cardItemPerPage]="4"
+        (resetAllFilter)="clearFilter($event)"
+        >
+    </mg-generic-listing-table>
+    
+    
+    <ng-template #tableRowTemp let-context="context">   
+        <div [ngSwitch]="context.columnname" >
+            <ng-container *ngSwitchCase="'status'">
+                <img src="{{ context?.row?.statusImgPath }}" style="width: 25px"  alt="" />
+            </ng-container> 
+            <ng-container *ngSwitchCase="'actions'">
+                <button mat-icon-button>
+                    <img class="icon-size-5" src="" />
+                </button>
+             
+            </ng-container>  
+            <ng-container *ngSwitchDefault>
+                <span  [ngClass]="{'disabled':context?.element?.disabled}" >{{context.value}}</span>
+             </ng-container>
+        </div>
+    </ng-template>
+    
+    <ng-template #tableHeaderTemp let-context="context">
+        <span title="{{context.value}}" >{{context.header}}</span>
+    </ng-template>
+    
+    
+    
+    <ng-template #cardItemTemplate let-context="context" let-request="context.item">
+        <div class="flex cardList   rounded flex-col gap-2">
+            <section class="cardList--header flex gap-2 max-h-10 w-full mb-3">
+              request  -   {{request.appointmentDate}}
+              context -  {{context?.item?.appointmentDate}}
+            </section>
+        </div>
+    </ng-template>
+
+
+    
+    <!-- <div *ngIf="gridConfig?.dataList && gridConfig?.dataList?.length == 0">
+        <div class="grid justify-items-center space-y-5 mt-10">
+            <div class="text-[#083668] text-2xl font-bold text-center">
+                No Data Found
+            </div>
+            <div class="text-center text-[#083668]">
+                Please adjust your search and filters criteria
+            </div>
+            <div class="text-center">
+                <button (click)="clearFilter()" class="bg-[#083668] p-2 text-center text-white"> Clear Filter </button>
+            </div>
+        </div>
+    </div> -->
+    
+</div>

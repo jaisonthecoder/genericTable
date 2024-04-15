@@ -1,0 +1,8 @@
+:root{
+    --mgGt_blue_btn_color: #224b78;
+    --mgGt_lightblue_btn_color: #5392d9;
+    --mgGt_white: #ffffff;
+    --mgGt_black: #222222;
+    --mgGt_error_text_color: darkred;
+    --mgGt-bg-blue:rgb(219, 234, 254);
+}

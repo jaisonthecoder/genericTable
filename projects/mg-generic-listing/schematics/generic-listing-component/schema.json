@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "generic-listing-component",
+    "title": "generic-listing-component Schema",
+    "type": "object",
+    "properties": {
+        "name": {
+            "description": "the name of the module",
+            "type": "string",
+            "x-prompt": "Please provide the name of your module? (eg: data-listing):",
+            "default": "generic-listing"
+        },       
+        "serviceCode": {
+            "description": "the code of the module",
+            "type": "string",
+            "x-prompt": "Please provide the service code ? (eg:booking):",
+            "default": "service-code"
+        },
+        "path": {
+            "description": "parent folder path to place the Generic listing component templates",
+            "type": "string",
+            "format": "path",
+            "x-prompt": "Please provide the parent folder path to place the listing component templates ? (eg: /src/app/YourFolderName):",
+            "default": "/src/app"
+        },
+        "importPath": {
+            "description": "module path to import the Generic Listing Module",
+            "type": "string",
+            "format": "path",
+            "x-prompt": "Please provide the module path to import the generic listing module ? (eg: /src/app/ModuleName.ts):",
+            "default": "/src/app/app.module.ts"
+        }
+    },
+    "required": ["name", "serviceCode", "path"]
+}

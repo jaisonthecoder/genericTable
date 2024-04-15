@@ -1,0 +1,350 @@
+:root{
+    --mgGt_blue_btn_color: #224b78;
+    --mgGt_lightblue_btn_color: #5392d9;
+    --mgGt_white: #ffffff;
+    --mgGt_black: #222222;
+    --mgGt_error_text_color: darkred;
+    --mgGt-bg-blue:rgb(219, 234, 254);
+}
+
+.percentage{
+    position: relative;
+    // background:#F7F7F7; 
+    padding: 2px 2px 2px;
+    bottom: 0em;
+    font-size: 60%;
+    color:black;
+  }
+  .percentage-span{
+    position: relative;
+    background:#F7F7F7; 
+    padding: 2px 2px 0px;
+    bottom: -1.5em;
+    font-size: 60%;
+    color:black;
+  }
+
+  .icon-size-vessel {
+    width: 2rem !important;
+    height: 2.3rem !important;
+    min-width: 2rem !important;
+    min-height: 2rem !important;
+    font-size: 2rem !important;
+    line-height: 2rem !important;
+}
+
+::ng-deep .mat-progress-bar {
+  height: 7px;
+}
+.table-flag{
+  border:1px solid #ddd;
+ // padding: 1px;
+}
+.info-icon-size-8 {
+  width: 1rem !important;
+  height: 1rem !important;
+  min-width: 1rem !important;
+  min-height: 1rem rem !important;
+  font-size: 2rem !important;
+  line-height: 2rem !important
+}
+
+// .mat-progress-bar.downloadProgress .mat-progress-bar-fill::after {
+//   background-color: red;
+// }
+
+// ::ng-deep .mat-progress-bar-fill::after{
+//   background-color: yellow !important;
+// }
+// ::ng-deep .mat-progress-bar-buffer {
+//   background: gray !important;
+// }
+$status-progress-color: blue;
+$status-cancelled-color: red;
+$status-success-color: green;
+
+$status-approved-fill-color: #1AC258;
+$status-rejected-fill-color: #D92836;
+$status-inprogress-fill-color: #3E7DC3;
+$status-draft-fill-color: #AFADAD;
+
+$status-approved-buffer-color: #C8F1D6;
+$status-rejected-buffer-color: #EFA2A7;
+$status-inprogress-buffer-color:#86ADDA;
+$status-draft-buffer-color: #E3E3E3;
+  .percentage{
+    position: relative;
+    // background:#F7F7F7; 
+    padding: 2px 2px 2px;
+    bottom: 0em;
+    font-size: 60%;
+    color:black;
+  }
+  .percentage-span{
+    position: relative;
+    background:#F7F7F7; 
+    padding: 2px 2px 0px;
+    bottom: -1.5em;
+    font-size: 60%;
+    color:black;
+  }
+
+  .icon-size-vessel {
+    width: 2rem !important;
+    height: 2.3rem !important;
+    min-width: 2rem !important;
+    min-height: 2rem !important;
+    font-size: 2rem !important;
+    line-height: 2rem !important;
+}
+
+::ng-deep .mat-progress-bar {
+  height: 7px;
+}
+.table-flag{
+  border:1px solid #ddd;
+ // padding: 1px;
+}
+.info-icon-size-8 {
+  width: 1rem !important;
+  height: 1rem !important;
+  min-width: 1rem !important;
+  min-height: 1rem rem !important;
+  font-size: 2rem !important;
+  line-height: 2rem !important
+}
+
+// .mat-progress-bar.downloadProgress .mat-progress-bar-fill::after {
+//   background-color: red;
+// }
+
+// ::ng-deep .mat-progress-bar-fill::after{
+//   background-color: yellow !important;
+// }
+// ::ng-deep .mat-progress-bar-buffer {
+//   background: gray !important;
+// }
+
+.btn-TransactionLog {
+  border: 1px solid var(--unnamed-color-5392d9);
+  border: 1px solid #5392D9;
+  opacity: 1;
+  color: #5392D9;
+  font-size: small;
+  width:110px;
+}
+
+.btn-Status {
+  min-width: 10px;
+  color: black;
+  font-size:small;
+  font-weight: bold;
+}
+.color-approved {
+  background: lighten($status-approved-fill-color, 53%) !important;
+}
+
+.color-rejected {
+  background: lighten($status-rejected-fill-color, 47%) !important;
+}
+
+.color-inprogress {
+  background: lighten($status-inprogress-fill-color, 46%) !important;
+}
+
+.color-draft {
+  background: #E9E9E9  !important;
+}
+
+.text-color-approved {
+  color: #1AC258;
+}
+
+.text-color-rejected {
+  color: #D92836;
+}
+
+.text-color-inprogress {
+  color: #3E7DC3;
+}
+
+.text-color-draft {
+  color: #E9E9E9;
+}
+
+.btn-Request{
+  border: 1px solid #5392d9;
+  border: 1px solid #5392d9;
+  border-radius: 4px;
+  opacity: 1;
+  font-size: small;
+  color: #5392d9;
+}
+.separate-right {
+  border-right: 1px solid #ddd;
+  padding-right:8px;
+  margin-right: 8px;
+}
+.separate-left{
+border-left: 1px solid #ddd;
+margin-left: 8px;
+padding-left: 8px;
+margin-right: -2px;
+}
+::ng-deep html[dir=ltr]{
+  .mat-menu-panel {
+    &.requestPopupMenu {
+      overflow: visible !important;
+      max-width: 100% !important;
+      min-height: auto !important;
+      // color: #5392d9;
+      margin-right: 16px !important;
+      box-shadow: 0px -1px 4px 5px rgb(0 0 0 / 4%), 0px 4px 5px 0px rgb(0 0 0 / 8%), 0px 1px 10px 0px rgb(0 0 0 / 12%) !important;
+
+      ul {
+        li {
+          a {
+            // img{
+            //     max-width: 32px;
+            // }
+            padding:  10px !important;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            &:hover{
+              background-color: #E8F3FF;
+            }
+
+            label{
+                padding: 4px 10px;
+                background-color: #5392d9;
+                font-size: 80%;
+                height: 22px;
+                color: #fff;
+                border-radius: 10px;
+                margin-right: 10px;
+                margin-left: 20px;
+            }
+          }
+        }
+    }  
+}
+
+     .mat-menu-content {
+      
+      &:after {
+        position: absolute;
+        content: "";
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid #fff;
+        top: -8px;
+        left: 14px;
+      }
+    }
+
+    // .mat-menu-after .mat-menu-content {
+    //   position: relative;
+    //   overflow: visible;
+
+    //   &:after {
+    //     position: absolute;
+    //     content: "";
+    //     width: 0;
+    //     height: 0;
+    //     border-left: 10px solid transparent;
+    //     border-right: 10px solid transparent;
+    //     border-bottom: 10px solid #fff;
+    //     top: -8px;
+    //     left: 14px;
+    //   }
+    // }
+  }
+}
+
+::ng-deep html[dir=rtl]{
+  .mat-menu-panel {
+    &.requestPopupMenu {
+      overflow: visible !important;
+      max-width: 100% !important;
+      min-height: auto !important;
+      // color: #5392d9;
+      margin-right: 16px !important;
+      box-shadow: 0px -1px 4px 5px rgb(0 0 0 / 4%), 0px 4px 5px 0px rgb(0 0 0 / 8%), 0px 1px 10px 0px rgb(0 0 0 / 12%) !important;
+
+      ul {
+        li {
+          a {
+            // img{
+            //     max-width: 32px;
+            // }
+            padding:  10px !important;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            &:hover{
+              background-color: #E8F3FF;
+            }
+
+            label{
+                padding: 4px 10px;
+                background-color: #5392d9;
+                font-size: 80%;
+                height: 22px;
+                color: #fff;
+                border-radius: 10px;
+                margin-right: 10px;
+                margin-left: 20px;
+            }
+          }
+        }
+    }  
+}
+
+     .mat-menu-content {
+      
+      &:after {
+        position: absolute;
+        content: "";
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid #fff;
+        top: -8px;
+        right: 14px;
+      }
+    }
+
+    // .mat-menu-after .mat-menu-content {
+    //   position: relative;
+    //   overflow: visible;
+
+    //   &:after {
+    //     position: absolute;
+    //     content: "";
+    //     width: 0;
+    //     height: 0;
+    //     border-left: 10px solid transparent;
+    //     border-right: 10px solid transparent;
+    //     border-bottom: 10px solid #fff;
+    //     top: -8px;
+    //     left: 14px;
+    //   }
+    // }
+  }
+}
+
+
+::ng-deep{
+
+.card-list-component .cardList--status-bar-shipSymbol{
+  max-width: 60px !important;
+}
+}

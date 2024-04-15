@@ -1,0 +1,16 @@
+{
+    "$schema":"../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+    "schematics":{
+        "ng-add": {
+            "description": "This will generate listing component",
+            "factory": "./generic-listing-component/index#genericListingComponentGenerator",
+            "schema": "./generic-listing-component/schema.json"
+        },
+        "generic-listing-component":{
+        "description": "This will generate listing component",
+        "factory": "./generic-listing-component/index#genericListingComponentGenerator",
+        "schema": "./generic-listing-component/schema.json",
+        "aliases": ["create-module"]
+        }
+    }
+}

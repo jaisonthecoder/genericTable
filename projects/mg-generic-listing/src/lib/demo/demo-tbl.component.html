@@ -1,0 +1,29 @@
+
+
+<div class="d-flex h-full flex-col">
+    <mg-generic-listing-table   *ngIf="selectedMBL != null" 
+     [headerTemplate]="tableHeaderTemp"   
+     [rowTemplate]="tableRowTemp"  
+     [showAdvanceSearch]="false"   
+     [gridConfig]="gridConfig"  [selectedLang]="'en-US'" 
+     (onGridDataChange)="getHBLGridData($event)"
+     (onPageChanges)="onHBLGridPageChanges($event)"
+     (onMenuFilterChanges) = "onMenuFilterChanges($event)">
+    </mg-generic-listing-table>  
+</div>
+
+
+
+
+
+<ng-template #tableRowTemp let-context="context">
+    <ng-container *ngIf="context.columnname == 'shipper'">
+       <h1 (click)="testClick()">shipper</h1>
+    </ng-container>
+    <h3>This is custom value - <b>{{context.value}}</b></h3> 
+</ng-template>
+
+
+<ng-template #tableHeaderTemp let-context="context">   
+    <span>{{context.header}}</span> 
+</ng-template>

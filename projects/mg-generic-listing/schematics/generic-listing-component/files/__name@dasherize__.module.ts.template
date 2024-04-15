@@ -1,0 +1,41 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTableModule } from '@angular/material/table';
+import { GenericListingTableService, MgGenericListingModule } from '@pcs/generic-listing';
+import {<%= classify(name) %>Component } from './<%= dasherize(name) %>.component';
+import { ResponseMaperService } from './helper/response-maper.service';
+import { StatusText } from './helper/status-mapper';
+import { TranslocoCoreModule } from 'app/core/transloco/transloco.module';
+import { ImagePipe, TruncTextPipe } from './helper/listing-helper.pipe';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { <%= classify(name) %>HelperButtonsComponent } from './shared-components/<%= dasherize(name) %>-helper-buttons/<%= dasherize(name) %>-helper-buttons.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FuseConfirmationModule } from '@fuse/services/confirmation/confirmation.module';
+
+
+
+@NgModule({
+  declarations: [<%= classify(name) %>Component, <%= classify(name) %>HelperButtonsComponent],
+  imports: [
+    CommonModule,
+    MatMenuModule,
+    MatTableModule,
+    MatPaginatorModule, 
+    MatFormFieldModule,
+    MatButtonModule,
+    MatIconModule,  
+    MgGenericListingModule,
+    TranslocoCoreModule,
+    ImagePipe,
+    TruncTextPipe,
+    MatTooltipModule,
+    FuseConfirmationModule
+  ],
+  exports:[MgGenericListingModule, <%= classify(name) %>Component, <%= classify(name) %>HelperButtonsComponent,  ImagePipe],
+  providers:[GenericListingTableService, ResponseMaperService, StatusText]
+})
+export class <%= classify(name) %>Module { }

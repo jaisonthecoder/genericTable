@@ -1,0 +1,186 @@
+@import "../../assets/scss/generic-table-styles.scss";
+
+.generic-table-search {
+    margin-bottom: 1rem;
+    font-size: 12px;
+
+    .generic-global-search {
+        // border: 1px solid #eee;
+        padding: 0.5rem 0;
+    }
+
+    .disabled {
+        opacity: 0.4 !important;
+    }
+}
+::ng-deep {
+    .generic-advance-search {
+        font-size: 12px;
+
+        padding: 1rem;
+        display: block;
+        background: #ffffff;
+        position: relative;
+
+        &:after {
+            width: 0;
+            height: 0;
+            border-left: 16px solid transparent;
+            border-right: 16px solid transparent;
+            border-bottom: 16px solid #ffffff;
+            content: "";
+            position: absolute;
+            right: 45px;
+            left: auto;
+            top: -14px;
+            z-index: 9999;
+            &:lang(ar-AE) ,  &:dir(RTL),  &:dir(rtl) {
+                right: auto;
+                left: 45px;
+            }
+        }
+
+        .mat-calendar-body-in-range:before {
+            background: #d3e6ff !important;
+        }
+
+        .mat-mdc-form-field-subscript-wrapper {
+            display: none;
+        }
+
+        &.active {
+            // border: 1px solid #bad3f7;
+        }
+
+        .select-item {
+            height: 100%;
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid rgb(203 213 225 / var(--tw-border-opacity)) !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .search-list {
+            display: flex;
+        }
+
+        section {
+            padding: 2px;
+
+            .mat-form-field-wrapper,
+            .mat-mdc-text-field-wrapper {
+                margin-bottom: 0 !important;
+                background-color: #ffffff;
+                padding: 0;
+                .mat-form-field-flex {
+                    border-radius: 0 !important;
+                }
+                .mat-form-field-underline {
+                    display: none;
+                }
+                .mat-input-underline {
+                    display: none !important;
+                }
+            }
+        }
+    }
+}
+
+.generic-global-search {
+    input {
+        border: none !important;
+        outline: none !important;
+    }
+    &.active {
+        // border: 1px solid #bad3f7;
+    }
+    section {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .clear-glbl-search-btn {
+        position: absolute;
+        right: 16px;
+        left: auto;
+        width: 24px;
+        height: 24px;
+        background: #eee;
+        text-align: center;
+        border-radius: 50%;
+        line-height: 24px;
+        font-family: monospace;
+        font-size: 12px;
+        cursor: pointer;
+        &:lang(ar-AE), &:dir(RTL),  &:dir(rtl) {
+            right: auto;
+            left: 16px;
+        }
+    }
+}
+
+.generic-adv-search-error {
+    background: #ffe8e8;
+    color: darkred;
+    font-size: 10px;
+    padding: 4px 10px;
+    margin-bottom: 10px;
+}
+
+.generic-advance-search-btns {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+
+    > button {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        width: 12.5rem !important;
+        text-align: center;
+        &.applySearchBtn {
+            background: #0d498b;
+            color: #fff;
+        }
+
+        &.resetSearchBtn {
+            background: #fff;
+            color: #5392d9;
+            border: 1px solid #5392d9;
+        }
+
+        &.AddConditionBtn {
+            background: #5392d9;
+            color: #fff;
+        }
+    }
+}
+
+.toggelSearchBtn {
+    background: #5392d9;
+    color: #fff;
+    padding: 0.6rem;
+    margin-left: 5px;
+    &:lang(ar-AE) {
+        margin-left: 0px;
+        margin-right: 5px;
+    }
+}
+
+.matSelectWrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.valueSearchField {
+    width: 100%;
+    height: 40px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    background: #fff;
+}

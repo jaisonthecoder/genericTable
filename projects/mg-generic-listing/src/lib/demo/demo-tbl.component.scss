@@ -1,0 +1,44 @@
+
+
+.mbl-section{
+    max-width: 260px;
+    background-color: #fff;
+}
+
+.blscreen{
+   > section{
+        height: 100%;
+    }
+}
+
+
+
+
+.d-flex {
+    display: flex;
+    &.flex-row {
+      flex-direction: row;
+    }
+    &.flex-col {
+      flex-direction: column;
+    }
+  
+    .col {
+      flex: 1 0 0%;
+    }
+  
+    .col-auto {
+      flex: 0 0 auto;
+      width: auto;
+    }
+  }
+
+  .backButton {
+    top: 94px;
+    left: 269px;
+    width: 55px;
+    height: 48px;
+    background: #E1E1E1 0% 0% no-repeat padding-box;
+    border: 1px solid #D5D5D5;
+    opacity: 1;
+}
